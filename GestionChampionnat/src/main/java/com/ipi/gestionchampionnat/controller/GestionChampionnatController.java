@@ -44,4 +44,9 @@ public class GestionChampionnatController {
         session.invalidate();
         return "redirect:/";
     }
+
+    @GetMapping("/admin/dashboard")
+    public String backoffice(Model model) {
+        return "admin/dashboard";
+    }
 }

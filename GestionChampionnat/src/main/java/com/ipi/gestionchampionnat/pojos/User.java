@@ -1,9 +1,6 @@
 package com.ipi.gestionchampionnat.pojos;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -19,6 +16,9 @@ public class User {
     private String password;
     private LocalDate creationDate;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     public User() {
     }
 
@@ -28,6 +28,14 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getFirstName() {
@@ -79,6 +87,8 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", creationDate=" + creationDate +
+                ", role=" + role +
                 '}';
     }
 }
+
