@@ -8,6 +8,24 @@ awesome/4.7.0/css/font-awesome.min.css">
     <title>Gestion Championnat</title>
 </head>
 <body>
+<header>
+    <nav>
+        <a data-th-href="@{/}">Accueil</a>
+
+        <!-- Bouton visible seulement si utilisateur a le rôle ADMIN -->
+        <a data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}"
+           data-th-href="@{/admin/dashboard}">Dashboard</a>
+
+        <!-- Connexion / Déconnexion -->
+        <span data-th-if="${not #authorization.expression('isAuthenticated()')}">
+            <a data-th-href="@{/login}">Connexion</a>
+        </span>
+
+        <span data-th-if="${#authorization.expression('isAuthenticated()')}">
+            <a data-th-href="@{/logout}">Déconnexion</a>
+        </span>
+    </nav>
+</header>
 
 
 <h1>Inscription</h1>

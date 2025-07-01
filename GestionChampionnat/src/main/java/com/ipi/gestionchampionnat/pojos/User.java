@@ -12,6 +12,7 @@ public class User {
 
     private String firstName;
     private String lastName;
+    @Column(nullable = false, unique = true)
     private String email;
     private String password;
     private LocalDate creationDate;
@@ -90,5 +91,6 @@ public class User {
                 ", role=" + role +
                 '}';
     }
+
 }
 
