@@ -1,27 +1,38 @@
 package com.ipi.gestionchampionnat.controller;
 
 
+import com.ipi.gestionchampionnat.dao.ChampionshipDao;
 import com.ipi.gestionchampionnat.dao.UserDao;
-import com.ipi.gestionchampionnat.pojos.Role;
-import com.ipi.gestionchampionnat.pojos.User;
+import com.ipi.gestionchampionnat.pojos.*;
+import com.ipi.gestionchampionnat.services.ChampionshipService;
+import com.ipi.gestionchampionnat.services.GameService;
+import com.ipi.gestionchampionnat.services.TeamService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class GestionChampionnatController {
     private UserDao userDao;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ChampionshipService championshipService;
+    @Autowired
+    private TeamService teamService;
+    @Autowired
+    private GameService gameService;
 
+    //CONNEXION
     @Autowired
     public GestionChampionnatController(UserDao userDao) {
         this.userDao = userDao;
@@ -47,42 +58,45 @@ public class GestionChampionnatController {
         }
     }
 
-    @GetMapping("/deconnexion")
-    public String deconnexion(HttpSession session) {
-        session.invalidate();
-        return "redirect:/";
-    }
-
     @GetMapping("/admin/dashboard")
     public String backoffice(Model model) {
         return "admin/dashboard";
     }
 
-    @GetMapping("/inscription")
-    public String showRegisterForm() {
-        return "inscription"; // Ton HTML
+
+    // INDEX
+    @GetMapping("/")
+    public String index(Model model) {
+        List<Championship> championnats = championshipService.findAll();
+        model.addAttribute("championnats", championnats);
+        return "index";
     }
 
-    @PostMapping("/inscription")
-    public String processRegister(@RequestParam String firstName,
-                                  @RequestParam String lastName,
-                                  @RequestParam String email,
-                                  @RequestParam String password,
-                                  Model model) {
-        if (userDao.findByEmail(email) != null) {
-            model.addAttribute("error", "Cet email est déjà utilisé");
-            return "inscription";
-        }
-
-        User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setRole(Role.USER);
-        user.setCreationDate(LocalDate.now());
-
-        userDao.save(user);
-        return "redirect:/connexion";
+    @GetMapping("/championship/{championShipId}")
+    public String showChampionShipResults(@PathVariable Long championShipId, Model model) {
+        Championship championShip = championshipService.findById(championShipId);
+        List<Game> games = gameService.findByChampionship(championShip);
+        model.addAttribute("championShip", championShip);
+        model.addAttribute("games", games);
+        return "championship/results";
     }
+
+    @GetMapping("/championship/{championShipId}/ranking")
+    public String showChampionShipRanking(@PathVariable Long championShipId, Model model) {
+        Championship championShip = championshipService.findById(championShipId);
+        List<Team> ranking = teamService.calculateRanking(championShip);
+        model.addAttribute("championShip", championShip);
+        model.addAttribute("ranking", ranking);
+        return "championship/ranking";
+    }
+
+    @GetMapping("/team/{teamId}")
+    public String showTeamSheet(@PathVariable Long teamId, Model model) {
+        Team team = teamService.findById(teamId).get();
+        List<Game> teamGames = gameService.findByTeam(team);
+        model.addAttribute("team", team);
+        model.addAttribute("games", teamGames);
+        return "team/details";
+    }
+
 }

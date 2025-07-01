@@ -1,40 +1,39 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../static/css/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font
-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Gestion Championnat</title>
+    <title>Accueil</title>
 </head>
 <body>
 <header>
     <nav>
-        <a data-th-href="@{/}">Accueil</a>
+        <a th:href="@{/}">Accueil</a>
 
-        <!-- Bouton visible seulement si utilisateur a le rôle ADMIN -->
-        <a data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}"
-           data-th-href="@{/admin/dashboard}">Dashboard</a>
+        <div style="float: right;">
+            <!-- Si l'utilisateur n'est pas connecté -->
+            <div th:if="${#authorization.expression('isAnonymous()')}">
+                <a th:href="@{/connexion}">Connexion</a>
+            </div>
 
-        <!-- Connexion / Déconnexion -->
-        <span data-th-if="${not #authorization.expression('isAuthenticated()')}">
-            <a data-th-href="@{/login}">Connexion</a>
-        </span>
+            <!-- Si l'utilisateur est connecté -->
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                <!-- Si c'est un admin -->
+                <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                    <a th:href="@{/admin/dashboard}">Dashboard</a> |
+                </span>
 
-        <span data-th-if="${#authorization.expression('isAuthenticated()')}">
-            <a data-th-href="@{/logout}">Déconnexion</a>
-        </span>
+                <!-- Déconnexion (POST obligatoire avec Spring Security) -->
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit">Déconnexion</button>
+                </form>
+            </div>
+        </div>
     </nav>
 </header>
 
 
-<h1>Inscription</h1>
-<form data-th-action="@{/login}" method="post">
-    <input type="text" name="username" placeholder="Nom d'utilisateur" />
-    <input type="password" name="password" placeholder="Mot de passe" />
-    <button type="submit">Se connecter</button>
-</form>
-
-
+<main>
+    <p>Contenu public de la page d'accueil.</p>
+</main>
 </body>
 </html>
