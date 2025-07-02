@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Détails de l'équipe</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="team-container">
+    <h1 th:text="${team.name}">Nom de l'équipe</h1>
+
+    <div class="header-section">
+        <div class="team-info">
+            <p><strong>Nom :</strong> <span th:text="${team.name}"></span></p>
+            <p><strong>Fondé en :</strong> <span th:text="${#temporals.format(team.creationDate, 'yyyy')}"></span></p>
+            <p><strong>Président :</strong> <span th:text="${team.president}"></span></p>
+            <p><strong>Entraîneur :</strong> <span th:text="${team.coach}"></span></p>
+        </div>
+        <div class="team-logo">
+            <img th:src="@{${team.logo}}" alt="Logo" style="max-height: 120px;">
+        </div>
+    </div>
+
+    <div class="admin-section">
+        <h3>Administratif</h3>
+        <p><strong>Site officiel :</strong> <a th:href="${team.webSite}" th:text="${team.webSite}"></a></p>
+        <p><strong>Statut :</strong> <span th:text="${team.status}"></span></p>
+        <p><strong>Siège :</strong> <br>
+            <span th:text="${team.siege}"></span>
+        </p>
+    </div>
+
+    <div class="stadium-section" th:if="${team.stadium != null}">
+        <h3>Stade de <span th:text="${team.name}"></span></h3>
+        <p><strong>Stade :</strong> <span th:text="${team.stadium.name}"></span></p>
+        <p><strong>Capacité :</strong> <span th:text="${team.stadium.capacity}"></span> places</p>
+        <p><strong>Adresse :</strong> <span th:text="${team.stadium.address}"></span></p>
+        <p><strong>Tél. Stade :</strong> <span th:text="${team.stadium.phone}"></span></p>
+    </div>
+</div>
+</body>
+</html>

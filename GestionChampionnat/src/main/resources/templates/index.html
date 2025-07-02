@@ -2,38 +2,54 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Accueil</title>
+    <title>Résultats par compétition</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font
+awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .championship-section {
+            margin-bottom: 2rem;
+        }
+        .championship-section h2 {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        .championships {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .championships a {
+            text-decoration: none;
+            color: #222;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        .championships a img {
+            width: 14px;
+            height: 10px;
+            margin-right: 0.4rem;
+        }
+    </style>
 </head>
 <body>
-<header>
-    <nav>
-        <a th:href="@{/}">Accueil</a>
-
-        <div style="float: right;">
-            <!-- Si l'utilisateur n'est pas connecté -->
-            <div th:if="${#authorization.expression('isAnonymous()')}">
-                <a th:href="@{/connexion}">Connexion</a>
-            </div>
-
-            <!-- Si l'utilisateur est connecté -->
-            <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <!-- Si c'est un admin -->
-                <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-                    <a th:href="@{/admin/dashboard}">Dashboard</a> |
-                </span>
-
-                <!-- Déconnexion (POST obligatoire avec Spring Security) -->
-                <form th:action="@{/logout}" method="post" style="display:inline;">
-                    <button type="submit">Déconnexion</button>
-                </form>
-            </div>
-        </div>
-    </nav>
-</header>
-
-
 <main>
-    <p>Contenu public de la page d'accueil.</p>
+    <h1>Résultats par compétition</h1>
+    <hr>
+
+    <div data-th-each="country : ${countries}" class="championship-section">
+        <h2 data-th-text="${country.name}">FRANCE</h2>
+        <div class="championships">
+            <a data-th-each="championShip : ${country.championShips}"
+               data-th-href="@{/championship/{id}(id=${championShip.id})}">
+                <img data-th-src="@{'/images/flags/' + ${country.name.toLowerCase()} + '.png'}" alt="flag">
+                <span data-th-text="${championShip.name}">Ligue 1</span>
+            </a>
+        </div>
+    </div>
 </main>
 </body>
 </html>

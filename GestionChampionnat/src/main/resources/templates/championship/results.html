@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns-th="http://www.thymeleaf.org">
+<head>
+    <title>Résultats - [[${championShip.name}]]</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<h1>Résultats du championnat : <span data-th-text="${championShip.name}"></span></h1>
+
+<div data-th-if="${games.isEmpty()}">
+    <p>Aucun match n’a encore été joué pour ce championnat.</p>
+</div>
+
+<div data-th-unless="${games.isEmpty()}">
+    <table>
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Équipe 1</th>
+            <th>Score</th>
+            <th>Équipe 2</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-th-each="game : ${games}">
+            <td data-th-text="${game.day != null ? game.day.number : 'N/A'}"></td>
+            <td>
+                <a data-th-href="@{/team/{id}(id=${game.team1.id})}" data-th-text="${game.team1.name}"></a>
+            </td>
+            <td>
+                <strong data-th-text="${game.team1Point}"></strong> - <strong data-th-text="${game.team2Point}"></strong>
+            </td>
+            <td>
+                <a data-th-href="@{/team/{id}(id=${game.team2.id})}" data-th-text="${game.team2.name}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<br>
+<a data-th-href="@{/}">← Retour à la liste des championnats</a>
+</body>
+</html>

@@ -4,9 +4,7 @@ package com.ipi.gestionchampionnat.controller;
 import com.ipi.gestionchampionnat.dao.ChampionshipDao;
 import com.ipi.gestionchampionnat.dao.UserDao;
 import com.ipi.gestionchampionnat.pojos.*;
-import com.ipi.gestionchampionnat.services.ChampionshipService;
-import com.ipi.gestionchampionnat.services.GameService;
-import com.ipi.gestionchampionnat.services.TeamService;
+import com.ipi.gestionchampionnat.services.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +29,10 @@ public class GestionChampionnatController {
     private TeamService teamService;
     @Autowired
     private GameService gameService;
+    @Autowired
+    private CountryService countryService;
+    @Autowired
+    private DayService dayService;
 
     //CONNEXION
     @Autowired
@@ -63,11 +65,12 @@ public class GestionChampionnatController {
         return "admin/dashboard";
     }
 
-
     // INDEX
     @GetMapping("/")
     public String index(Model model) {
         List<Championship> championnats = championshipService.findAll();
+        List<Country> countries = countryService.findAllWithChampionShips();
+        model.addAttribute("countries", countries);
         model.addAttribute("championnats", championnats);
         return "index";
     }
@@ -82,10 +85,10 @@ public class GestionChampionnatController {
     }
 
     @GetMapping("/championship/{championShipId}/ranking")
-    public String showChampionShipRanking(@PathVariable Long championShipId, Model model) {
-        Championship championShip = championshipService.findById(championShipId);
-        List<Team> ranking = teamService.calculateRanking(championShip);
-        model.addAttribute("championShip", championShip);
+    public String showChampionShipRanking(@PathVariable Long championshipId, Model model) {
+        Championship championship = championshipService.findById(championshipId);
+        List<Team> ranking = teamService.calculateRanking(championship);
+        model.addAttribute("championShip", championship);
         model.addAttribute("ranking", ranking);
         return "championship/ranking";
     }
@@ -99,4 +102,24 @@ public class GestionChampionnatController {
         return "team/details";
     }
 
+    @GetMapping("/championship/{championShipId}/day/{dayId}")
+    public String showDayResults(@PathVariable Long championShipId,
+                                 @PathVariable Long dayId,
+                                 Model model) {
+        Championship championShip = championshipService.findById(championShipId);
+        Day day = dayService.findById(dayId);
+        List<Game> games = gameService.findByDay(day);
+
+        model.addAttribute("championship", championShip);
+        model.addAttribute("day", day);
+        model.addAttribute("games", games);
+        return "championship/day_results";
+    }
+
+    @GetMapping("/team/{id}")
+    public String showTeamDetails(@PathVariable Long id, Model model) {
+        Team team = teamService.findById(id).get();
+        model.addAttribute("team", team);
+        return "team/details";
+    }
 }

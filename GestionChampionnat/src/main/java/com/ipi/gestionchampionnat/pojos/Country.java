@@ -16,6 +16,9 @@ public class Country {
     @OneToMany(mappedBy = "country")
     private List<Team> teams;
 
+    @OneToMany(mappedBy = "country")
+    private List<Championship> championShips;
+
     public Country() {
     }
 

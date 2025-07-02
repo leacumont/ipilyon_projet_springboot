@@ -42,32 +42,33 @@ public class TeamServiceImpl implements TeamService {
     public void deleteAll() { teamDao.deleteAll(); }
 
     @Override
-    public List<Team> calculateRanking(Championship championShip) {
-        Map<Team, Integer> teamPoints = new HashMap<>();
-        List<Game> games = gameDao.findByChampionShip(championShip);
+    public List<Team> calculateRanking(Championship championship) {
+        Map<Team, Integer> pointsMap = new HashMap<>();
+        List<Game> games = gameDao.findByChampionShip(championship);
 
         for (Game game : games) {
-            Team home = game.getTeam1();
-            Team away = game.getTeam1();
-            int homeScore = game.getTeam1Point();
-            int awayScore = game.getTeam2Point();
+            Team team1 = game.getTeam1();
+            Team team2 = game.getTeam2();
+            int team1Points = game.getTeam1Point();
+            int team2Points = game.getTeam2Point();
 
-            teamPoints.putIfAbsent(home, 0);
-            teamPoints.putIfAbsent(away, 0);
+            pointsMap.putIfAbsent(team1, 0);
+            pointsMap.putIfAbsent(team2, 0);
 
-            if (homeScore > awayScore) {
-                teamPoints.put(home, teamPoints.get(home) + 3);
-            } else if (homeScore < awayScore) {
-                teamPoints.put(away, teamPoints.get(away) + 3);
+            if (team1Points > team2Points) {
+                pointsMap.put(team1, pointsMap.get(team1) + 3);
+            } else if (team1Points < team2Points) {
+                pointsMap.put(team2, pointsMap.get(team2) + 3);
             } else {
-                teamPoints.put(home, teamPoints.get(home) + 1);
-                teamPoints.put(away, teamPoints.get(away) + 1);
+                pointsMap.put(team1, pointsMap.get(team1) + 1);
+                pointsMap.put(team2, pointsMap.get(team2) + 1);
             }
         }
 
-        List<Team> ranking = new ArrayList<>(teamPoints.keySet());
-        ranking.sort((t1, t2) -> teamPoints.get(t2) - teamPoints.get(t1));
-
-        return ranking;
+        return pointsMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Team, Integer>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
+                .toList();
     }
 }

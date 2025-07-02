@@ -2,6 +2,7 @@ package com.ipi.gestionchampionnat.services.impl;
 
 import com.ipi.gestionchampionnat.dao.GameDao;
 import com.ipi.gestionchampionnat.pojos.Championship;
+import com.ipi.gestionchampionnat.pojos.Day;
 import com.ipi.gestionchampionnat.pojos.Game;
 import com.ipi.gestionchampionnat.pojos.Team;
 import com.ipi.gestionchampionnat.services.GameService;
@@ -50,5 +51,9 @@ public class GameServiceImpl implements GameService {
         return gameDao.findByHomeTeamOrAwayTeam(team, team);
     }
 
+    @Override
+    public List<Game> findByDay(Day day) {
+        return gameDao.findByDay(day);
+    }
 
 }

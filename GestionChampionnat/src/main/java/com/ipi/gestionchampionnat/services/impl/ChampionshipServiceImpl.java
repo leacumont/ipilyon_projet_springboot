@@ -2,6 +2,7 @@ package com.ipi.gestionchampionnat.services.impl;
 
 import com.ipi.gestionchampionnat.dao.ChampionshipDao;
 import com.ipi.gestionchampionnat.pojos.Championship;
+import com.ipi.gestionchampionnat.pojos.Country;
 import com.ipi.gestionchampionnat.pojos.Game;
 import com.ipi.gestionchampionnat.pojos.Team;
 import com.ipi.gestionchampionnat.services.ChampionshipService;
@@ -49,5 +50,9 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     @Override
     public List<Game> getGamesForDay(Long championshipId, Long dayId) {
         return List.of();
+    }
+
+    public List<Championship> findByCountry(Country country) {
+        return championshipDao.findByCountry(country);
     }
 }

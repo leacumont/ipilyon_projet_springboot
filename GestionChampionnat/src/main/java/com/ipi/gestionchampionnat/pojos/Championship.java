@@ -31,6 +31,10 @@ public class Championship {
     )
     private List<Team> teams;
 
+    @ManyToOne
+    @JoinColumn(name = "idCountry")
+    private Country country;
+
     public Championship() {
     }
 

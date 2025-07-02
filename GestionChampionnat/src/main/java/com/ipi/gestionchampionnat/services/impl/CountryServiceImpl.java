@@ -1,6 +1,8 @@
 package com.ipi.gestionchampionnat.services.impl;
 
+import com.ipi.gestionchampionnat.dao.ChampionshipDao;
 import com.ipi.gestionchampionnat.dao.CountryDao;
+import com.ipi.gestionchampionnat.pojos.Championship;
 import com.ipi.gestionchampionnat.pojos.Country;
 import com.ipi.gestionchampionnat.services.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ public class CountryServiceImpl implements CountryService {
 
     @Autowired
     CountryDao countryDao;
+    @Autowired
+    private ChampionshipDao championshipDao;
 
     @Override
     public List<Country> findAll() {
@@ -37,5 +41,15 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public void deleteAll() {
         countryDao.deleteAll();
+    }
+
+    @Override
+    public List<Country> findAllWithChampionShips() {
+        List<Country> countries = countryDao.findAll();
+        for (Country country : countries) {
+            List<Championship> cs = championshipDao.findByCountry(country);
+            country.setChampionShips(cs);
+        }
+        return countries;
     }
 }

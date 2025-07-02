@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Résultats journée</title>
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font
+awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .game-row {
+        display: flex;
+        justify-content: center;
+        margin: 10px 0;
+        font-family: sans-serif;
+    }
+
+    .match-info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .team-name {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .score {
+        font-size: 18px;
+        font-weight: bold;
+        padding: 4px 12px;
+        background-color: #222;
+        color: white;
+        border-radius: 6px;
+    }
+    </style>
+</head>
+<body>
+
+<h2>Calendrier et résultats [[${championShip.name}]] [[${#dates.format(#dates.createNow(), 'yyyy')}]]</h2>
+<h3>[[${day.number}]]e journée</h3>
+
+<div data-th-each="game : ${games}" class="game-row">
+    <div class="match-date">
+        <form data-th-action="@{'/championship/' + ${championship.id} + '/day'}" method="get">
+            <select name="dayId" onchange="this.form.submit()">
+                <option data-th-each="d : ${championship.days}"
+                        data-th-value="${d.id}"
+                        data-th-text="${d.number} + 'e journée'"
+                        data-th-selected="${d.id} == ${day.id}">
+                </option>
+            </select>
+        </form>
+    </div>
+    <div class="match-info">
+        <span class="team-name">
+            <img data-th-src="@{'/img/teams/' + ${game.team1.logo}}" alt="logo" width="20">
+            [[${game.team1.name}]]
+        </span>
+
+        <span class="score">
+            [[${game.team1Point}]] - [[${game.team2Point}]]
+        </span>
+
+        <span class="team-name">
+            <img data-th-src="@{'/img/teams/' + ${game.team2.logo}}" alt="logo" width="20">
+            [[${game.team2.name}]]
+        </span>
+    </div>
+</div>
+
+</body>
+</html>

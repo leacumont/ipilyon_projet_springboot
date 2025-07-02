@@ -1,6 +1,7 @@
 package com.ipi.gestionchampionnat.services;
 
 import com.ipi.gestionchampionnat.pojos.Championship;
+import com.ipi.gestionchampionnat.pojos.Country;
 import com.ipi.gestionchampionnat.pojos.Game;
 import com.ipi.gestionchampionnat.pojos.Team;
 
@@ -16,5 +17,5 @@ public interface ChampionshipService {
     /* méthodes métier utiles */
     void addTeam(Championship championship, Team team);
     List<Game> getGamesForDay(Long championshipId, Long dayId);
-    //List<Team> getRanking(int championshipId);
+    List<Championship> findByCountry(Country country);
 }

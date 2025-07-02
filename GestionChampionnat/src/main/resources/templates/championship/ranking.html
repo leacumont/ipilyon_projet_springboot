@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns-th="http://www.thymeleaf.org">
+<head>
+    <title>Classement [[${championShip.name}]]</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead tr {
+            background-color: #f3f3f3;
+        }
+        td, th {
+            padding: 8px;
+            text-align: center;
+        }
+        td.name {
+            text-align: left;
+        }
+        .form {
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .form span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 0 2px;
+        }
+        .win  { background: green; }
+        .draw { background: gray; }
+        .lose { background: red; }
+    </style>
+</head>
+<body>
+
+<h2>Classement [[${championship.name}]]</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Équipe</th>
+        <th>Pts</th>
+        <th>J</th>
+        <th>G</th>
+        <th>N</th>
+        <th>P</th>
+        <th>p.</th>
+        <th>c.</th>
+        <th>+/-</th>
+        <th>Forme</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr data-th-each="team, iStat : ${ranking}">
+        <td data-th-text="${iStat.index + 1}">1</td>
+        <td class="name" data-th-text="${team.name}">Équipe</td>
+        <td data-th-text="${team.totalPoints}">84</td>
+        <td data-th-text="${team.playedGames}">34</td>
+        <td data-th-text="${team.wonGames}">26</td>
+        <td data-th-text="${team.drawGames}">6</td>
+        <td data-th-text="${team.lostGames}">2</td>
+        <td data-th-text="${team.goalsFor}">92</td>
+        <td data-th-text="${team.goalsAgainst}">35</td>
+        <td data-th-text="${team.goalsFor - team.goalsAgainst}">+57</td>
+        <td class="form">
+                    <span data-th-each="result : ${team.lastResults}"
+                          data-th-classappend="${result == 'W'} ? 'win' :
+                                          ${result == 'D'} ? 'draw' :
+                                          ${result == 'L'} ? 'lose' : ''">
+                    </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br/>
+<a data-th-href="@{/}">← Retour aux championnats</a>
+
+</body>
+</html>
