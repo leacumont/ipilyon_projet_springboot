@@ -1,5 +1,6 @@
 package com.ipi.gestionchampionnat.services;
 
+import com.ipi.gestionchampionnat.dto.TeamRankingDTO;
 import com.ipi.gestionchampionnat.pojos.Championship;
 import com.ipi.gestionchampionnat.pojos.Game;
 import com.ipi.gestionchampionnat.pojos.Team;
@@ -13,7 +14,7 @@ public interface TeamService {
     Team save(Team team);
     void delete(Long id);
     void deleteAll();
-    List<Team> calculateRanking(Championship championShip);
+    List<TeamRankingDTO> calculateRanking(Championship championShip);
     List<Team> getTeamsByCountry(Long countryId);
     List<Team> getTeamsByStadium(Long stadiumId);
     List<Team> getTeamsByChampionship(Long championshipId);

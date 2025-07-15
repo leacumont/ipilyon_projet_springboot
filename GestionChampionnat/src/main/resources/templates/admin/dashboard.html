@@ -46,6 +46,28 @@
         }
     </style>
 </head>
+<header>
+    <nav>
+        <a data-th-href="@{/}">Accueil</a>
+
+        <div style="float: right;">
+            <div data-th-if="${#authorization.expression('isAnonymous()')}">
+                <a data-th-href="@{/connexion}">Connexion</a>
+            </div>
+
+            <div data-th-if="${#authorization.expression('isAuthenticated()')}">
+                <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a data-th-href="@{/admin/dashboard}">Dashboard</a> |
+            </span>
+
+                <form data-th-action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit">Déconnexion</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+</header>
 <body>
 <h1>Création des données</h1>
 

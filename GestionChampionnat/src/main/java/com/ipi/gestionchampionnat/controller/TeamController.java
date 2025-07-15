@@ -32,6 +32,7 @@ public class TeamController {
         List<Game> teamGames = gameService.getGamesByTeam(team.getId());
         model.addAttribute("team", team);
         model.addAttribute("games", teamGames);
-        return "team/details";
+
+        return "teamsdetails";
     }
 }

@@ -3,6 +3,7 @@ package com.ipi.gestionchampionnat.services.impl;
 import com.ipi.gestionchampionnat.dao.GameDao;
 import com.ipi.gestionchampionnat.dao.TeamChampionshipDao;
 import com.ipi.gestionchampionnat.dao.TeamDao;
+import com.ipi.gestionchampionnat.dto.TeamRankingDTO;
 import com.ipi.gestionchampionnat.pojos.Championship;
 import com.ipi.gestionchampionnat.pojos.Game;
 import com.ipi.gestionchampionnat.pojos.Team;
@@ -47,7 +48,7 @@ public class TeamServiceImpl implements TeamService {
     public void deleteAll() { teamDao.deleteAll(); }
 
     @Override
-    public List<Team> calculateRanking(Championship championship) {
+    public List<TeamRankingDTO> calculateRanking(Championship championship) {
         List<TeamChampionship> participations = teamChampionshipDao.findByChampionship_Id(championship.getId());
         List<Game> allGames = gameDao.findByDay_Championship_Id(championship.getId());
 
@@ -55,11 +56,15 @@ public class TeamServiceImpl implements TeamService {
         int pointsForDraw = championship.getDrawPoint();
         int pointsForLoss = championship.getLostPoint();
 
-        Map<Team, Integer> teamPointsMap = new HashMap<>();
+        List<TeamRankingDTO> rankings = new ArrayList<>();
 
         for (TeamChampionship tc : participations) {
             Team team = tc.getTeam();
-            int points = 0;
+            TeamRankingDTO dto = new TeamRankingDTO();
+            dto.setTeam(team);
+
+            int points = 0, played = 0, won = 0, draw = 0, lost = 0, gf = 0, ga = 0;
+            List<String> lastResults = new ArrayList<>();
 
             for (Game game : allGames) {
                 if (game.getTeam1() == null || game.getTeam2() == null) continue;
@@ -69,25 +74,47 @@ public class TeamServiceImpl implements TeamService {
 
                 if (!isTeam1 && !isTeam2) continue;
 
-                int teamScore = isTeam1 ? game.getTeam1Point() : game.getTeam2Point();
-                int opponentScore = isTeam1 ? game.getTeam2Point() : game.getTeam1Point();
+                Integer teamScore = isTeam1 ? game.getTeam1Point() : game.getTeam2Point();
+                Integer opponentScore = isTeam1 ? game.getTeam2Point() : game.getTeam1Point();
+
+                if (teamScore == null || opponentScore == null) continue;
+
+                gf += teamScore;
+                ga += opponentScore;
+                played++;
 
                 if (teamScore > opponentScore) {
+                    won++;
                     points += pointsForWin;
-                } else if (teamScore == opponentScore) {
+                    lastResults.add("W");
+                } else if (teamScore.equals(opponentScore)) {
+                    draw++;
                     points += pointsForDraw;
+                    lastResults.add("D");
                 } else {
+                    lost++;
                     points += pointsForLoss;
+                    lastResults.add("L");
                 }
             }
+            if (lastResults.size() > 5) {
+                lastResults = lastResults.subList(lastResults.size() - 5, lastResults.size());
+            }
 
-            teamPointsMap.put(team, points);
+            dto.setTotalPoints(points);
+            dto.setPlayedGames(played);
+            dto.setWonGames(won);
+            dto.setDrawGames(draw);
+            dto.setLostGames(lost);
+            dto.setGoalsFor(gf);
+            dto.setGoalsAgainst(ga);
+            dto.setLastResults(lastResults);
+            rankings.add(dto);
         }
 
-        return teamPointsMap.entrySet().stream()
-                .sorted(Map.Entry.<Team, Integer>comparingByValue().reversed())
-                .map(Map.Entry::getKey)
-                .toList();
+        return rankings.stream()
+                    .sorted(Comparator.comparingInt(TeamRankingDTO::getTotalPoints).reversed())
+                    .toList();
     }
 
     @Override

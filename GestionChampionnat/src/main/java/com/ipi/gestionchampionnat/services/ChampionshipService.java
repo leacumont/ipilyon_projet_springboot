@@ -16,5 +16,5 @@ public interface ChampionshipService {
 
     List<Championship> getChampionshipsByCountry(Country country);
     List<Championship> getChampionshipsByTeam(Long teamId);
-
+    Long getLastDayId(Long championshipId);
 }

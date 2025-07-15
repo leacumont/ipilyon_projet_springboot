@@ -1,5 +1,6 @@
 package com.ipi.gestionchampionnat.config;
 
+import com.ipi.gestionchampionnat.pojos.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,7 +20,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").authenticated() // sécurise le backoffice
+                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.toString())
                         .anyRequest().permitAll()
                 )
                 .formLogin(login -> login
@@ -31,6 +32,7 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/connexion")
                 );
+
         return http.build();
     }
 }

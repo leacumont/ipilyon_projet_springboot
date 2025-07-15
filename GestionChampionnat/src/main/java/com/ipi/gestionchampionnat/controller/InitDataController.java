@@ -4,6 +4,7 @@ import com.ipi.gestionchampionnat.dao.*;
 import com.ipi.gestionchampionnat.pojos.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
@@ -34,7 +35,12 @@ public class InitDataController {
     private TeamChampionshipDao teamChampionshipDao;
 
     @Autowired
-    public InitDataController(StadiumDao stadiumDao, TeamDao teamDao, CountryDao countryDao, ChampionshipDao championshipDao, DayDao dayDao, GameDao gameDao, TeamChampionshipDao teamChampionshipDao) {
+    private UserDao userDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public InitDataController(StadiumDao stadiumDao, TeamDao teamDao, CountryDao countryDao, ChampionshipDao championshipDao, DayDao dayDao, GameDao gameDao, TeamChampionshipDao teamChampionshipDao, UserDao userDao) {
         this.stadiumDao = stadiumDao;
         this.teamDao = teamDao;
         this.countryDao = countryDao;
@@ -42,6 +48,7 @@ public class InitDataController {
         this.dayDao = dayDao;
         this.gameDao = gameDao;
         this.teamChampionshipDao = teamChampionshipDao;
+        this.userDao = userDao;
     }
 
     @PostConstruct
@@ -53,6 +60,7 @@ public class InitDataController {
         championshipDao.deleteAll();
         countryDao.deleteAll();
         stadiumDao.deleteAll();
+        userDao.deleteAll();
 
         Championship championship = new Championship();
         championship.setName("Ligue 1");
@@ -67,17 +75,17 @@ public class InitDataController {
         Country france = new Country();
         france.setName("France");
         france.setLogo("https://example.com/logos/france.png");
-        france.setTeams(new ArrayList<>()); // Init liste
+        france.setTeams(new ArrayList<>());
 
         Day day1 = new Day();
         day1.setNumber("1");
         day1.setChampionship(championship);
-        day1.setGames(new ArrayList<>()); // Init liste
+        day1.setGames(new ArrayList<>());
 
         Day day2 = new Day();
         day2.setNumber("2");
         day2.setChampionship(championship);
-        day2.setGames(new ArrayList<>()); // Init liste
+        day2.setGames(new ArrayList<>());
 
         Team psg = new Team();
         psg.setName("Paris Saint-Germain");
@@ -90,9 +98,9 @@ public class InitDataController {
         psg.setPhone("0123456789");
         psg.setWebSite("https://psg.fr");
         psg.setCountry(france);
-        psg.setTeam1(new ArrayList<>()); // Init liste des matchs où PSG est team1
-        psg.setTeam2(new ArrayList<>()); // Init liste des matchs où PSG est team2
-        psg.setTeamChampionships(new ArrayList<>()); // Init liste
+        psg.setTeam1(new ArrayList<>());
+        psg.setTeam2(new ArrayList<>());
+        psg.setTeamChampionships(new ArrayList<>());
 
         Team om = new Team();
         om.setName("Olympique de Marseille");
@@ -105,11 +113,10 @@ public class InitDataController {
         om.setPhone("0491753230");
         om.setWebSite("https://om.fr");
         om.setCountry(france);
-        om.setTeam1(new ArrayList<>()); // Init liste des matchs où OM est team1
-        om.setTeam2(new ArrayList<>()); // Init liste des matchs où OM est team2
-        om.setTeamChampionships(new ArrayList<>()); // Init liste
+        om.setTeam1(new ArrayList<>());
+        om.setTeam2(new ArrayList<>());
+        om.setTeamChampionships(new ArrayList<>());
 
-        // Ajout des équipes dans la liste du pays
         france.getTeams().add(psg);
         france.getTeams().add(om);
 
@@ -127,13 +134,11 @@ public class InitDataController {
         match2.setTeam2Point(4);
         match2.setDay(day2);
 
-        // Ajout des matchs dans les listes des équipes
         psg.getTeam1().add(match1);
         psg.getTeam1().add(match2);
         om.getTeam2().add(match1);
         om.getTeam2().add(match2);
 
-        // Ajout des matchs dans les jours
         day1.getGames().add(match1);
         day2.getGames().add(match2);
 
@@ -182,5 +187,24 @@ public class InitDataController {
         gameDao.save(match2);
         teamChampionshipDao.save(teamChampionshipPSG);
         teamChampionshipDao.save(teamChampionshipOM);
+
+        User user = new User();
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setEmail("john.doe@example.com");
+        user.setPassword(passwordEncoder.encode("securePassword123"));
+        user.setCreationDate(LocalDate.now());
+        user.setRole(Role.USER);
+
+        User admin = new User();
+        admin.setFirstName("admin");
+        admin.setLastName("admin");
+        admin.setEmail("admin@gmail.com");
+        admin.setPassword(passwordEncoder.encode("securePasswordADMIN"));
+        admin.setCreationDate(LocalDate.now());
+        admin.setRole(Role.ADMIN);
+
+        userDao.save(user);
+        userDao.save(admin);
     }
 }

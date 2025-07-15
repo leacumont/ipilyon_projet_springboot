@@ -1,10 +1,8 @@
 package com.ipi.gestionchampionnat.services.impl;
 
 import com.ipi.gestionchampionnat.dao.ChampionshipDao;
-import com.ipi.gestionchampionnat.pojos.Championship;
-import com.ipi.gestionchampionnat.pojos.Country;
-import com.ipi.gestionchampionnat.pojos.Game;
-import com.ipi.gestionchampionnat.pojos.Team;
+import com.ipi.gestionchampionnat.dao.DayDao;
+import com.ipi.gestionchampionnat.pojos.*;
 import com.ipi.gestionchampionnat.services.ChampionshipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +12,11 @@ import java.util.NoSuchElementException;
 
 @Service
 public class ChampionshipServiceImpl implements ChampionshipService {
-
     @Autowired
     ChampionshipDao championshipDao;
+
+    @Autowired
+    DayDao dayDao;
 
     @Override
     public List<Championship> findAll() {
@@ -52,5 +52,14 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     @Override
     public List<Championship> getChampionshipsByTeam(Long teamId) {
         return championshipDao.findChampionshipsByTeamId(teamId);
+    }
+
+    @Override
+    public Long getLastDayId(Long championshipId) {
+        List<Day> days = dayDao.findByChampionshipOrderByDayDateDesc(championshipId);
+        if (days.isEmpty()) {
+            return null; // ou throw exception selon ta logique
+        }
+        return days.get(0).getId();  // la journée la plus récente
     }
 }

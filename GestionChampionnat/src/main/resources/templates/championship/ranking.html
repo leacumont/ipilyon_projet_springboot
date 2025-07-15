@@ -34,9 +34,31 @@
         .lose { background: red; }
     </style>
 </head>
+<header>
+    <nav>
+        <a data-th-href="@{/}">Accueil</a>
+
+        <div style="float: right;">
+            <div data-th-if="${#authorization.expression('isAnonymous()')}">
+                <a data-th-href="@{/connexion}">Connexion</a>
+            </div>
+
+            <div data-th-if="${#authorization.expression('isAuthenticated()')}">
+                <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a data-th-href="@{/admin/dashboard}">Dashboard</a> |
+            </span>
+
+                <form data-th-action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit">Déconnexion</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+</header>
 <body>
 
-<h2>Classement [[${championship.name}]]</h2>
+<h2>Classement [[${championShip.name}]]</h2>
 
 <table>
     <thead>
@@ -55,23 +77,21 @@
     </tr>
     </thead>
     <tbody>
-    <tr data-th-each="team, iStat : ${ranking}">
+    <tr data-th-each="teamRank, iStat : ${ranking}">
         <td data-th-text="${iStat.index + 1}">1</td>
-        <td class="name" data-th-text="${team.name}">Équipe</td>
-        <td data-th-text="${team.totalPoints}">84</td>
-        <td data-th-text="${team.playedGames}">34</td>
-        <td data-th-text="${team.wonGames}">26</td>
-        <td data-th-text="${team.drawGames}">6</td>
-        <td data-th-text="${team.lostGames}">2</td>
-        <td data-th-text="${team.goalsFor}">92</td>
-        <td data-th-text="${team.goalsAgainst}">35</td>
-        <td data-th-text="${team.goalsFor - team.goalsAgainst}">+57</td>
+        <td class="name" data-th-text="${teamRank.team.name}">Équipe</td>
+        <td data-th-text="${teamRank.totalPoints}">84</td>
+        <td data-th-text="${teamRank.playedGames}">34</td>
+        <td data-th-text="${teamRank.wonGames}">26</td>
+        <td data-th-text="${teamRank.drawGames}">6</td>
+        <td data-th-text="${teamRank.lostGames}">2</td>
+        <td data-th-text="${teamRank.goalsFor}">92</td>
+        <td data-th-text="${teamRank.goalsAgainst}">35</td>
+        <td data-th-text="${teamRank.goalsFor - teamRank.goalsAgainst}">+57</td>
         <td class="form">
-                    <span data-th-each="result : ${team.lastResults}"
-                          data-th-classappend="${result == 'W'} ? 'win' :
-                                          ${result == 'D'} ? 'draw' :
-                                          ${result == 'L'} ? 'lose' : ''">
-                    </span>
+        <span data-th-each="result : ${teamRank.lastResults}"
+              data-th-class="${result == 'W' ? 'win' : (result == 'D' ? 'draw' : (result == 'L' ? 'lose' : ''))}">
+        </span>
         </td>
     </tr>
     </tbody>

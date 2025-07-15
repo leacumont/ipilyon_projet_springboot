@@ -4,8 +4,32 @@
     <title>Résultats - [[${championShip.name}]]</title>
     <link rel="stylesheet" href="/css/style.css" />
 </head>
+<header>
+    <nav>
+        <a data-th-href="@{/}">Accueil</a>
+
+        <div style="float: right;">
+            <div data-th-if="${#authorization.expression('isAnonymous()')}">
+                <a data-th-href="@{/connexion}">Connexion</a>
+            </div>
+
+            <div data-th-if="${#authorization.expression('isAuthenticated()')}">
+                <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a data-th-href="@{/admin/dashboard}">Dashboard</a> |
+            </span>
+
+                <form data-th-action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit">Déconnexion</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+</header>
 <body>
 <h1>Résultats du championnat : <span data-th-text="${championShip.name}"></span></h1>
+<a data-th-href="@{/championship/{id}/day/{day}(id=${championShip.id}, day=${lastDayId})}">Voir les résultats du jour</a>
+<a data-th-href="@{/championship/{id}/ranking(id=${championShip.id})}">Voir le classement</a>
 
 <div data-th-if="${games.isEmpty()}">
     <p>Aucun match n’a encore été joué pour ce championnat.</p>

@@ -37,6 +37,28 @@ awesome/4.7.0/css/font-awesome.min.css">
     }
     </style>
 </head>
+<header>
+    <nav>
+        <a data-th-href="@{/}">Accueil</a>
+
+        <div style="float: right;">
+            <div data-th-if="${#authorization.expression('isAnonymous()')}">
+                <a data-th-href="@{/connexion}">Connexion</a>
+            </div>
+
+            <div data-th-if="${#authorization.expression('isAuthenticated()')}">
+                <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a data-th-href="@{/admin/dashboard}">Dashboard</a> |
+            </span>
+
+                <form data-th-action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit">Déconnexion</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+</header>
 <body>
 
 <h2>Calendrier et résultats [[${championShip.name}]] [[${#dates.format(#dates.createNow(), 'yyyy')}]]</h2>
@@ -44,15 +66,25 @@ awesome/4.7.0/css/font-awesome.min.css">
 
 <div data-th-each="game : ${games}" class="game-row">
     <div class="match-date">
-        <form data-th-action="@{'/championship/' + ${championship.id} + '/day'}" method="get">
-            <select name="dayId" onchange="this.form.submit()">
-                <option data-th-each="d : ${championship.days}"
+        <div>
+            <select id="daySelect"
+                    data-th-field="*{day.id}"
+                    onchange="redirectToDay(this)">
+                <option data-th-each="d : ${championShip.days}"
                         data-th-value="${d.id}"
-                        data-th-text="${d.number} + 'e journée'"
-                        data-th-selected="${d.id} == ${day.id}">
+                        data-th-selected="${d.id} == ${day.id}"
+                        data-th-text="${d.number} + 'e journée'">
                 </option>
             </select>
-        </form>
+        </div>
+
+        <script data-th-inline="javascript">
+            function redirectToDay(selectElement) {
+                var selectedDayId = selectElement.value;
+                var championShipId = /*[[${championShip.id}]]*/ '0';
+                window.location.href = '/championship/' + championShipId + '/day/' + selectedDayId;
+            }
+        </script>
     </div>
     <div class="match-info">
         <span class="team-name">

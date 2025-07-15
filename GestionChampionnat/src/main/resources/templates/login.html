@@ -13,31 +13,27 @@ awesome/4.7.0/css/font-awesome.min.css">
         <a data-th-href="@{/}">Accueil</a>
 
         <div style="float: right;">
-            <!-- Si l'utilisateur n'est pas connecté -->
             <div data-th-if="${#authorization.expression('isAnonymous()')}">
-                <a data-th-href="@{/connexion}">Connexion</a> |
-                <a data-th-href="@{/inscription}">Inscription</a>
+                <a data-th-href="@{/connexion}">Connexion</a>
             </div>
 
-            <!-- Si l'utilisateur est connecté -->
             <div data-th-if="${#authorization.expression('isAuthenticated()')}">
-                <!-- Si c'est un admin -->
                 <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
-                    <a data-th-href="@{/admin/dashboard}">Dashboard</a> |
-                </span>
+                <a data-th-href="@{/admin/dashboard}">Dashboard</a> |
+            </span>
 
-                <!-- Déconnexion (POST obligatoire avec Spring Security) -->
                 <form data-th-action="@{/logout}" method="post" style="display:inline;">
                     <button type="submit">Déconnexion</button>
                 </form>
             </div>
         </div>
     </nav>
+
 </header>
 
 
 <h1>Connexion</h1>
-<form data-th-action="@{/login}" method="post">
+<form data-th-action="@{/connexion}" method="post">
     <input type="text" name="username" placeholder="Nom d'utilisateur" />
     <input type="password" name="password" placeholder="Mot de passe" />
     <button type="submit">Se connecter</button>

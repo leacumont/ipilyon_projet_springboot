@@ -1,6 +1,7 @@
 package com.ipi.gestionchampionnat.controller;
 
 import com.ipi.gestionchampionnat.dao.TeamChampionshipDao;
+import com.ipi.gestionchampionnat.dto.TeamRankingDTO;
 import com.ipi.gestionchampionnat.pojos.*;
 import com.ipi.gestionchampionnat.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,8 @@ public class ChampionshipController {
         Championship championShip = championshipService.findById(championShipId);
         List<Game> games = gameService.findByDay_Championship_Id(championShipId);
 
+        Long lastDayId = championshipService.getLastDayId(championShipId);
+        model.addAttribute("lastDayId", lastDayId);
         model.addAttribute("championShip", championShip);
         model.addAttribute("games", games);
         return "championship/results";
@@ -97,7 +100,7 @@ public class ChampionshipController {
     @GetMapping("/championship/{championShipId}/ranking")
     public String showChampionShipRanking(@PathVariable Long championShipId, Model model) {
         Championship championship = championshipService.findById(championShipId);
-        List<Team> ranking = teamService.calculateRanking(championship);
+        List<TeamRankingDTO> ranking = teamService.calculateRanking(championship);
 
         model.addAttribute("championShip", championship);
         model.addAttribute("ranking", ranking);
@@ -112,7 +115,7 @@ public class ChampionshipController {
         Day day = dayService.findById(dayId);
         List<Game> games = gameService.getGamesByDay(dayId);
 
-        model.addAttribute("championship", championShip);
+        model.addAttribute("championShip", championShip);
         model.addAttribute("day", day);
         model.addAttribute("games", games);
         return "championship/day_results";
