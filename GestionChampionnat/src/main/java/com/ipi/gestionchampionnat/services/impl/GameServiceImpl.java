@@ -48,12 +48,19 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<Game> getGamesByTeam(Long teamId) {
-        return gameDao.findByTeamId(teamId);
+    public List<Game> findByDay_Championship_Id(Long championshipId) {
+        return gameDao.findByDay_Championship_Id(championshipId);
     }
 
-    @Override
-    public List<Game> getGamesByChampionship(Long championshipId) {
-        return gameDao.findByDay_Championship_Id(championshipId);
+    public List<Game> getGamesByTeam(Long teamId) {
+        return gameDao.findByTeamInGame(teamId);
+    }
+
+    public List<Game> getGamesByTeam1(Long teamId) {
+        return gameDao.findByTeam1_Id(teamId);
+    }
+
+    public List<Game> getGamesByTeam2(Long teamId) {
+        return gameDao.findByTeam2_Id(teamId);
     }
 }

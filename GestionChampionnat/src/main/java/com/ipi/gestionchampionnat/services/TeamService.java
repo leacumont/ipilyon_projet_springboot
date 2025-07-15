@@ -1,6 +1,7 @@
 package com.ipi.gestionchampionnat.services;
 
 import com.ipi.gestionchampionnat.pojos.Championship;
+import com.ipi.gestionchampionnat.pojos.Game;
 import com.ipi.gestionchampionnat.pojos.Team;
 
 import java.util.List;
@@ -16,5 +17,4 @@ public interface TeamService {
     List<Team> getTeamsByCountry(Long countryId);
     List<Team> getTeamsByStadium(Long stadiumId);
     List<Team> getTeamsByChampionship(Long championshipId);
-
 }

@@ -15,10 +15,9 @@ import java.util.Optional;
 @Repository
 public interface GameDao extends JpaRepository<Game, Long> {
     List<Game> findByDay_Championship_Id(Long championshipId);
-
-    List<Game> findByTeamId(Long teamId);
-
     List<Game> findByDay_Id(Long dayId);
-
-    List<Game> findByChampionshipIdAndTeamId(Long championshipId, Long teamId);
+    List<Game> findByTeam1_Id(Long teamId);
+    List<Game> findByTeam2_Id(Long teamId);
+    @Query("SELECT g FROM Game g WHERE g.team1.id = :teamId OR g.team2.id = :teamId")
+    List<Game> findByTeamInGame(@Param("teamId") Long teamId);
 }

@@ -49,55 +49,46 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<Team> calculateRanking(Championship championship) {
         List<TeamChampionship> participations = teamChampionshipDao.findByChampionship_Id(championship.getId());
+        List<Game> allGames = gameDao.findByDay_Championship_Id(championship.getId());
 
-        // Map Team -> points calculés
-        Map<Team, Integer> teamPointsMap = new HashMap<>();
-
-        // Récupère les paramètres du championnat
         int pointsForWin = championship.getWonPoint();
         int pointsForDraw = championship.getDrawPoint();
         int pointsForLoss = championship.getLostPoint();
 
+        Map<Team, Integer> teamPointsMap = new HashMap<>();
+
         for (TeamChampionship tc : participations) {
             Team team = tc.getTeam();
+            int points = 0;
 
-            // Calculer les stats de l'équipe dans ce championnat (via gameService ?)
-            List<Game> games = gameDao.getGamesByTeamAndChampionship(team.getId(), championship.getId());
+            for (Game game : allGames) {
+                if (game.getTeam1() == null || game.getTeam2() == null) continue;
 
-            int wins = 0, draws = 0, losses = 0;
+                boolean isTeam1 = game.getTeam1().getId().equals(team.getId());
+                boolean isTeam2 = game.getTeam2().getId().equals(team.getId());
 
-            for (Game game : games) {
-                // Il faut déterminer si l'équipe a gagné, perdu ou fait nul dans ce match
-                if (game.getScoreHome() == null || game.getScoreAway() == null) {
-                    // Match pas encore joué, on ignore
-                    continue;
-                }
+                if (!isTeam1 && !isTeam2) continue;
 
-                boolean isHomeTeam = game.getHomeTeam().getId().equals(team.getId());
-                int teamScore = isHomeTeam ? game.getScoreHome() : game.getScoreAway();
-                int opponentScore = isHomeTeam ? game.getScoreAway() : game.getScoreHome();
+                int teamScore = isTeam1 ? game.getTeam1Point() : game.getTeam2Point();
+                int opponentScore = isTeam1 ? game.getTeam2Point() : game.getTeam1Point();
 
                 if (teamScore > opponentScore) {
-                    wins++;
+                    points += pointsForWin;
                 } else if (teamScore == opponentScore) {
-                    draws++;
+                    points += pointsForDraw;
                 } else {
-                    losses++;
+                    points += pointsForLoss;
                 }
             }
 
-            int totalPoints = wins * pointsForWin + draws * pointsForDraw + losses * pointsForLoss;
-            teamPointsMap.put(team, totalPoints);
+            teamPointsMap.put(team, points);
         }
 
-        // Trier les équipes par points décroissants
         return teamPointsMap.entrySet().stream()
                 .sorted(Map.Entry.<Team, Integer>comparingByValue().reversed())
                 .map(Map.Entry::getKey)
                 .toList();
     }
-
-
 
     @Override
     public List<Team> getTeamsByCountry(Long countryId) {

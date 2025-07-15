@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <title>Résultats par compétition</title>
     <link rel="stylesheet" href="../static/css/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font
-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .championship-section {
             margin-bottom: 2rem;
@@ -39,16 +38,22 @@ awesome/4.7.0/css/font-awesome.min.css">
 <main>
     <h1>Résultats par compétition</h1>
     <hr>
+    <div data-th-each="entry : ${countryChampionshipTeams}" class="championship-section">
+        <h2 data-th-text="${entry.key.name}">Nom du pays</h2>
 
-    <div data-th-each="country : ${countries}" class="championship-section">
-        <h2 data-th-text="${country.name}">FRANCE</h2>
         <div class="championships">
-            <a data-th-each="championShip : ${country.championShips}"
+            <a data-th-each="championShip : ${entry.value.keySet()}"
                data-th-href="@{/championship/{id}(id=${championShip.id})}">
-                <img data-th-src="@{'/images/flags/' + ${country.name.toLowerCase()} + '.png'}" alt="flag">
-                <span data-th-text="${championShip.name}">Ligue 1</span>
+                <img data-th-src="@{'/images/flags/' + ${entry.key.name.toLowerCase()} + '.png'}" alt="flag" />
+                <span data-th-text="${championShip.name}">Nom du championnat</span>
             </a>
         </div>
+    </div>
+
+    <div data-th-if="${errors}">
+        <ul>
+            <li data-th-each="error : ${errors}" data-th-text="${error}" style="color: red;"></li>
+        </ul>
     </div>
 </main>
 </body>

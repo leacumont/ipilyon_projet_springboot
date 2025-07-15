@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ChampionshipServiceImpl implements ChampionshipService {
@@ -24,7 +25,8 @@ public class ChampionshipServiceImpl implements ChampionshipService {
 
     @Override
     public Championship findById(Long id) {
-        return championshipDao.findById(id).get();
+        return championshipDao.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Championnat introuvable avec id : " + id));
     }
 
     @Override

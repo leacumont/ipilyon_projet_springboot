@@ -4,66 +4,90 @@ import com.ipi.gestionchampionnat.dao.TeamChampionshipDao;
 import com.ipi.gestionchampionnat.pojos.*;
 import com.ipi.gestionchampionnat.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping("/")
 public class ChampionshipController {
-
     @Autowired
     private ChampionshipService championshipService;
-
     @Autowired
     private TeamService teamService;
-
     @Autowired
     private GameService gameService;
-
     @Autowired
     private CountryService countryService;
-
     @Autowired
     private DayService dayService;
-
     @Autowired
     private TeamChampionshipDao teamChampionshipDao;
 
+    @Autowired
+    public ChampionshipController(ChampionshipService championshipService, TeamService teamService, GameService gameService, CountryService countryService, DayService dayService, TeamChampionshipDao teamChampionshipDao) {
+        this.championshipService = championshipService;
+        this.teamService = teamService;
+        this.gameService = gameService;
+        this.countryService = countryService;
+        this.dayService = dayService;
+        this.teamChampionshipDao = teamChampionshipDao;
+    }
+
+    @GetMapping("/test")
+    @ResponseBody
+    public String test() {
+        return "test";
+    }
+
     @GetMapping("/")
     public String index(Model model) {
+        List<String> errors = new ArrayList<>();
         List<Country> countries = countryService.findAll();
+        if (countries == null || countries.isEmpty()) {
+            errors.add("Aucun pays trouvé.");
+            model.addAttribute("errors", errors);
+            return "index";
+        }
         Map<Country, Map<Championship, List<Team>>> countryChampionshipTeams = new LinkedHashMap<>();
 
         for (Country country : countries) {
             List<Championship> championships = championshipService.getChampionshipsByCountry(country);
+            if (championships == null || championships.isEmpty()) {
+                errors.add("Aucun championnat trouvé pour le pays : " + country.getName());
+                continue;
+            }
             Map<Championship, List<Team>> championshipTeams = new HashMap<>();
 
             for (Championship c : championships) {
-                // Récupérer les participations via TeamChampionship
                 List<TeamChampionship> participations = teamChampionshipDao.findByChampionship_Id(c.getId());
                 List<Team> teams = participations.stream()
                         .map(TeamChampionship::getTeam)
                         .collect(Collectors.toList());
+
+                if (teams == null || teams.isEmpty()) {
+                    errors.add("Aucune équipe trouvée pour le championnat : " + c.getName());
+                }
                 championshipTeams.put(c, teams);
             }
-
             countryChampionshipTeams.put(country, championshipTeams);
         }
-
+        if (countryChampionshipTeams.isEmpty()) {
+            errors.add("Aucun championnat ou équipe trouvé.");
+        }
         model.addAttribute("countryChampionshipTeams", countryChampionshipTeams);
+        model.addAttribute("errors", errors);
         return "index";
     }
 
     @GetMapping("/championship/{championShipId}")
     public String showChampionShipResults(@PathVariable Long championShipId, Model model) {
         Championship championShip = championshipService.findById(championShipId);
-        List<Game> games = gameService.getGamesByChampionship(championShipId);
+        List<Game> games = gameService.findByDay_Championship_Id(championShipId);
 
         model.addAttribute("championShip", championShip);
         model.addAttribute("games", games);

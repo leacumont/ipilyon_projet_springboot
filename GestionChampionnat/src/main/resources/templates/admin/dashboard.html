@@ -1,10 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Admin - Création Données</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 2rem;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        form {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.3rem;
+        }
+        button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1a242f;
+        }
+    </style>
 </head>
 <body>
+<h1>Création des données</h1>
+
+<form data-th-action="@{/admin/championship/create}" method="post">
+    <h2>Créer un championnat</h2>
+    <label>Nom</label>
+    <input type="text" name="name" required>
+
+    <label>Logo (URL)</label>
+    <input type="text" name="logo">
+
+    <label>Date de début</label>
+    <input type="date" name="startDate" required>
+
+    <label>Date de fin</label>
+    <input type="date" name="endDate" required>
+
+    <label>Points pour une victoire</label>
+    <input type="number" name="wonPoint" required>
+
+    <label>Points pour un match nul</label>
+    <input type="number" name="drawPoint" required>
+
+    <label>Points pour une défaite</label>
+    <input type="number" name="lostPoint" required>
+
+    <label>Type de classement</label>
+    <input type="text" name="typeRanking" placeholder="Ex: points" required>
+
+    <label>Pays</label>
+    <select name="countryId" data-th-each="country : ${countries}" data-th-value="${country.id}" data-th-text="${country.name}"></select>
+
+    <button type="submit">Créer</button>
+</form>
+
+<form data-th-action="@{/admin/team/create}" method="post">
+    <h2>Créer une équipe</h2>
+    <label>Nom</label>
+    <input type="text" name="name" required>
+    <label>Date de création</label>
+    <input type="date" name="creationDate" required>
+    <label>Logo (URL)</label>
+    <input type="text" name="logo">
+    <label>Coach</label>
+    <input type="text" name="coach">
+    <label>Président</label>
+    <input type="text" name="president">
+    <label>Status</label>
+    <input type="text" name="status">
+    <label>Siège</label>
+    <input type="text" name="siege">
+    <label>Téléphone</label>
+    <input type="text" name="phone">
+    <label>Site web</label>
+    <input type="text" name="webSite">
+    <label>Stade</label>
+    <select name="stadiumId" data-th-each="stadium : ${stadiums}" data-th-value="${stadium.id}" data-th-text="${stadium.name}"></select>
+    <label>Pays</label>
+    <select name="countryId" data-th-each="country : ${countries}" data-th-value="${country.id}" data-th-text="${country.name}"></select>
+    <button type="submit">Créer</button>
+</form>
+
+<form data-th-action="@{/admin/game/create}" method="post">
+    <h2>Créer un match</h2>
+    <label for="team1Id">Équipe 1</label>
+    <select id="team1Id" name="team1Id" required>
+        <option data-th-each="team : ${teams}" data-th-value="${team.id}" data-th-text="${team.name}"></option>
+    </select>
+
+    <label for="team2Id">Équipe 2</label>
+    <select id="team2Id" name="team2Id" required>
+        <option data-th-each="team : ${teams}" data-th-value="${team.id}" data-th-text="${team.name}"></option>
+    </select>
+
+    <label for="dayId">Journée</label>
+    <select id="dayId" name="dayId" required>
+        <option data-th-each="day : ${days}" data-th-value="${day.id}" data-th-text="${day.label}"></option>
+    </select>
+
+    <label for="score1">Score Équipe 1</label>
+    <input type="number" id="score1" name="score1" min="0" required>
+
+    <label for="score2">Score Équipe 2</label>
+    <input type="number" id="score2" name="score2" min="0" required>
+
+    <button type="submit">Créer le match</button>
+</form>
 
 </body>
 </html>
