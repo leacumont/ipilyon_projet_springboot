@@ -43,16 +43,12 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     }
 
     @Override
-    public void addTeam(Championship championship, Team team) {
-        //championshipDao.save(championship);
+    public List<Championship> getChampionshipsByCountry(Country country) {
+        return championshipDao.findByCountry(country);
     }
 
     @Override
-    public List<Game> getGamesForDay(Long championshipId, Long dayId) {
-        return List.of();
-    }
-
-    public List<Championship> findByCountry(Country country) {
-        return championshipDao.findByCountry(country);
+    public List<Championship> getChampionshipsByTeam(Long teamId) {
+        return championshipDao.findChampionshipsByTeamId(teamId);
     }
 }

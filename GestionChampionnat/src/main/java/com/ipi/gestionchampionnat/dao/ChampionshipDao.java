@@ -17,5 +17,5 @@ public interface ChampionshipDao extends JpaRepository<Championship, Long> {
     List<Championship> findActiveChampionships();
 
     @Query("SELECT c FROM Championship c JOIN c.teamChampionships tc WHERE tc.team.id = :teamId")
-    List<Championship> findChampionshipsByTeamId(@Param("teamId") int teamId);
+    List<Championship> findChampionshipsByTeamId(@Param("teamId") Long teamId);
 }
