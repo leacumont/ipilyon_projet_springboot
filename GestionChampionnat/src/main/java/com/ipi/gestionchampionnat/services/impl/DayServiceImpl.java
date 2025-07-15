@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DayServiceImpl implements DayService {
@@ -37,5 +38,10 @@ public class DayServiceImpl implements DayService {
     @Override
     public void deleteAll() {
         dayDao.deleteAll();
+    }
+
+    @Override
+    public Optional<Day> getDayByChampionshipAndNumber(Long championshipId, String number) {
+        return dayDao.findByChampionship_IdAndNumber(championshipId, number);
     }
 }

@@ -14,8 +14,7 @@ public interface ChampionshipService {
     void delete(Long id);
     void deleteAll();
 
-    /* méthodes métier utiles */
-    void addTeam(Championship championship, Team team);
-    List<Game> getGamesForDay(Long championshipId, Long dayId);
-    List<Championship> findByCountry(Country country);
+    List<Championship> getChampionshipsByCountry(Country country);
+    List<Championship> getChampionshipsByTeam(Long teamId);
+
 }

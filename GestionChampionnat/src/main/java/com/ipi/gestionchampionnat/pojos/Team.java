@@ -33,10 +33,13 @@ public class Team {
     private List<Championship> championships;
 
     @OneToMany(mappedBy = "team1")
-    private List<Game> homeGames;
+    private List<Game> team1;
 
     @OneToMany(mappedBy = "team2")
-    private List<Game> awayGames;
+    private List<Game> team2;
+
+    @OneToMany(mappedBy = "team")
+    private List<TeamChampionship> teamChampionships;
 
     public Team() {
     }
@@ -145,20 +148,28 @@ public class Team {
         this.championships = championships;
     }
 
-    public List<Game> getHomeGames() {
-        return homeGames;
+    public List<Game> getTeam1() {
+        return team1;
     }
 
-    public void setHomeGames(List<Game> homeGames) {
-        this.homeGames = homeGames;
+    public void setTeam1(List<Game> team1) {
+        this.team1 = team1;
     }
 
-    public List<Game> getAwayGames() {
-        return awayGames;
+    public List<Game> getTeam2() {
+        return team2;
     }
 
-    public void setAwayGames(List<Game> awayGames) {
-        this.awayGames = awayGames;
+    public void setTeam2(List<Game> team2) {
+        this.team2 = team2;
+    }
+
+    public List<TeamChampionship> getTeamChampionships() {
+        return teamChampionships;
+    }
+
+    public void setTeamChampionships(List<TeamChampionship> teamChampionships) {
+        this.teamChampionships = teamChampionships;
     }
 
     @Override
@@ -177,8 +188,8 @@ public class Team {
                 ", stadium=" + stadium +
                 ", country=" + country +
                 ", championships=" + championships +
-                ", homeGames=" + homeGames +
-                ", awayGames=" + awayGames +
+                ", team1=" + team1 +
+                ", team2=" + team2 +
                 '}';
     }
 }

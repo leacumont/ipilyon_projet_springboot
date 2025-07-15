@@ -44,12 +44,12 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public List<Country> findAllWithChampionShips() {
-        List<Country> countries = countryDao.findAll();
-        for (Country country : countries) {
-            List<Championship> cs = championshipDao.findByCountry(country);
-            country.setChampionShips(cs);
-        }
-        return countries;
+    public List<Country> getCountriesWithTeams() {
+        return countryDao.findCountriesWithTeams();
+    }
+
+    @Override
+    public List<Country> getCountriesOrderByTeamsCount() {
+        return countryDao.findCountriesOrderByTeamsCount();
     }
 }

@@ -13,4 +13,8 @@ public interface TeamService {
     void delete(Long id);
     void deleteAll();
     List<Team> calculateRanking(Championship championShip);
+    List<Team> getTeamsByCountry(Long countryId);
+    List<Team> getTeamsByStadium(Long stadiumId);
+    List<Team> getTeamsByChampionship(Long championshipId);
+
 }

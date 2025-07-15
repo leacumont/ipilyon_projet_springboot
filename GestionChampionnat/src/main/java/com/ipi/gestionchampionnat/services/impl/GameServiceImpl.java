@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -42,18 +43,32 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<Game> findByChampionship(Championship championShip) {
-        return gameDao.findByChampionShip(championShip);
+    public List<Game> getGamesByDay(Long dayId) {
+        return gameDao.findByDay_Id(dayId);
     }
 
     @Override
-    public List<Game> findByTeam(Team team) {
-        return gameDao.findByHomeTeamOrAwayTeam(team, team);
+    public List<Game> getGamesByTeam(Long teamId) {
+        return gameDao.findByTeam1_IdOrTeam2_Id(teamId, teamId);
     }
 
     @Override
-    public List<Game> findByDay(Day day) {
-        return gameDao.findByDay(day);
+    public List<Game> getGamesByChampionship(Long championshipId) {
+        return gameDao.findByDay_Championship_Id(championshipId);
     }
 
+    @Override
+    public List<Game> getGamesByChampionshipAndTeam(Long championshipId, Long teamId) {
+        return gameDao.findGamesByChampionshipAndTeam(championshipId, teamId);
+    }
+
+    @Override
+    public Optional<Game> getGameBetweenTeams(Long team1Id, Long team2Id, Long championshipId) {
+        return gameDao.findGameBetweenTeams(team1Id, team2Id, championshipId);
+    }
+
+    @Override
+    public List<Game> getGamesByChampionshipOrderByDay(Long championshipId) {
+        return gameDao.findGamesByChampionshipOrderByDay(championshipId);
+    }
 }

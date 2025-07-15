@@ -23,17 +23,10 @@ public class Championship {
     @OneToMany(mappedBy = "championship")
     private List<Day> days;
 
-    @ManyToMany
-    @JoinTable(
-            name = "TeamChampionShip",
-            joinColumns = @JoinColumn(name = "idChampionship"),
-            inverseJoinColumns = @JoinColumn(name = "idTeam")
-    )
-    private List<Team> teams;
+    @OneToMany(mappedBy = "championship")
+    private List<TeamChampionship> teamChampionships;
 
-    @ManyToOne
-    @JoinColumn(name = "idCountry")
-    private Country country;
+    private List<Team> teams;
 
     public Championship() {
     }
@@ -124,6 +117,14 @@ public class Championship {
 
     public void setTeams(List<Team> teams) {
         this.teams = teams;
+    }
+
+    public List<TeamChampionship> getTeamChampionships() {
+        return teamChampionships;
+    }
+
+    public void setTeamChampionships(List<TeamChampionship> teamChampionships) {
+        this.teamChampionships = teamChampionships;
     }
 
     @Override

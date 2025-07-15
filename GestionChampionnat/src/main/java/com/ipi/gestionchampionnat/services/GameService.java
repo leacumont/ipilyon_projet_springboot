@@ -6,6 +6,7 @@ import com.ipi.gestionchampionnat.pojos.Game;
 import com.ipi.gestionchampionnat.pojos.Team;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GameService {
     List<Game> findAll();
@@ -13,7 +14,10 @@ public interface GameService {
     Game save(Game game);
     void delete(Long id);
     void deleteAll();
-    List<Game> findByChampionship(Championship championShip);
-    List<Game> findByTeam(Team team);
-    List<Game> findByDay(Day day);
+    List<Game> getGamesByDay(Long dayId);
+    List<Game> getGamesByTeam(Long teamId);
+    List<Game> getGamesByChampionship(Long championshipId);
+    List<Game> getGamesByChampionshipAndTeam(Long championshipId, Long teamId);
+    Optional<Game> getGameBetweenTeams(Long team1Id, Long team2Id, Long championshipId);
+    List<Game> getGamesByChampionshipOrderByDay(Long championshipId);
 }
