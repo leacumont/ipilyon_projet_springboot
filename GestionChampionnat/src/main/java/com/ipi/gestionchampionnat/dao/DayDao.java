@@ -11,11 +11,11 @@ import java.util.Optional;
 
 @Repository
 public interface DayDao extends JpaRepository<Day, Long> {
-    List<Day> findByChampionship_Id(int championshipId);
+    List<Day> findByChampionship_Id(Long championshipId);
 
-    List<Day> findByChampionship_IdOrderByNumberAsc(int championshipId);
+    List<Day> findByChampionship_IdOrderByNumberAsc(Long championshipId);
 
-    Optional<Day> findByChampionship_IdAndNumber(int championshipId, String number);
+    Optional<Day> findByChampionship_IdAndNumber(Long championshipId, String number);
 
     @Query("SELECT d FROM Day d WHERE d.championship.id = :championshipId AND d.number = :number")
     Optional<Day> findDayByChampionshipAndNumber(@Param("championshipId") Long championshipId, @Param("number") String number);

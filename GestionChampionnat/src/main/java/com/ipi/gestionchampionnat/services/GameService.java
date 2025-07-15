@@ -17,7 +17,4 @@ public interface GameService {
     List<Game> getGamesByDay(Long dayId);
     List<Game> getGamesByTeam(Long teamId);
     List<Game> getGamesByChampionship(Long championshipId);
-    List<Game> getGamesByChampionshipAndTeam(Long championshipId, Long teamId);
-    Optional<Game> getGameBetweenTeams(Long team1Id, Long team2Id, Long championshipId);
-    List<Game> getGamesByChampionshipOrderByDay(Long championshipId);
 }

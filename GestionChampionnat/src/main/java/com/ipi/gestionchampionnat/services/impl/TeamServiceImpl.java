@@ -1,15 +1,18 @@
 package com.ipi.gestionchampionnat.services.impl;
 
 import com.ipi.gestionchampionnat.dao.GameDao;
+import com.ipi.gestionchampionnat.dao.TeamChampionshipDao;
 import com.ipi.gestionchampionnat.dao.TeamDao;
 import com.ipi.gestionchampionnat.pojos.Championship;
 import com.ipi.gestionchampionnat.pojos.Game;
 import com.ipi.gestionchampionnat.pojos.Team;
+import com.ipi.gestionchampionnat.pojos.TeamChampionship;
 import com.ipi.gestionchampionnat.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamServiceImpl implements TeamService {
@@ -17,6 +20,8 @@ public class TeamServiceImpl implements TeamService {
     TeamDao teamDao;
     @Autowired
     GameDao gameDao;
+    @Autowired
+    TeamChampionshipDao teamChampionshipDao;
 
     @Override
     public List<Team> findAll() {
@@ -43,32 +48,69 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List<Team> calculateRanking(Championship championship) {
-        Map<Team, Integer> pointsMap = new HashMap<>();
-        List<Game> games = gameDao.findByChampionShip(championship);
+        List<TeamChampionship> participations = teamChampionshipDao.findByChampionship_Id(championship.getId());
 
-        for (Game game : games) {
-            Team team1 = game.getTeam1();
-            Team team2 = game.getTeam2();
-            int team1Points = game.getTeam1Point();
-            int team2Points = game.getTeam2Point();
+        // Map Team -> points calculés
+        Map<Team, Integer> teamPointsMap = new HashMap<>();
 
-            pointsMap.putIfAbsent(team1, 0);
-            pointsMap.putIfAbsent(team2, 0);
+        // Récupère les paramètres du championnat
+        int pointsForWin = championship.getWonPoint();
+        int pointsForDraw = championship.getDrawPoint();
+        int pointsForLoss = championship.getLostPoint();
 
-            if (team1Points > team2Points) {
-                pointsMap.put(team1, pointsMap.get(team1) + 3);
-            } else if (team1Points < team2Points) {
-                pointsMap.put(team2, pointsMap.get(team2) + 3);
-            } else {
-                pointsMap.put(team1, pointsMap.get(team1) + 1);
-                pointsMap.put(team2, pointsMap.get(team2) + 1);
+        for (TeamChampionship tc : participations) {
+            Team team = tc.getTeam();
+
+            // Calculer les stats de l'équipe dans ce championnat (via gameService ?)
+            List<Game> games = gameDao.getGamesByTeamAndChampionship(team.getId(), championship.getId());
+
+            int wins = 0, draws = 0, losses = 0;
+
+            for (Game game : games) {
+                // Il faut déterminer si l'équipe a gagné, perdu ou fait nul dans ce match
+                if (game.getScoreHome() == null || game.getScoreAway() == null) {
+                    // Match pas encore joué, on ignore
+                    continue;
+                }
+
+                boolean isHomeTeam = game.getHomeTeam().getId().equals(team.getId());
+                int teamScore = isHomeTeam ? game.getScoreHome() : game.getScoreAway();
+                int opponentScore = isHomeTeam ? game.getScoreAway() : game.getScoreHome();
+
+                if (teamScore > opponentScore) {
+                    wins++;
+                } else if (teamScore == opponentScore) {
+                    draws++;
+                } else {
+                    losses++;
+                }
             }
+
+            int totalPoints = wins * pointsForWin + draws * pointsForDraw + losses * pointsForLoss;
+            teamPointsMap.put(team, totalPoints);
         }
 
-        return pointsMap.entrySet()
-                .stream()
+        // Trier les équipes par points décroissants
+        return teamPointsMap.entrySet().stream()
                 .sorted(Map.Entry.<Team, Integer>comparingByValue().reversed())
                 .map(Map.Entry::getKey)
                 .toList();
+    }
+
+
+
+    @Override
+    public List<Team> getTeamsByCountry(Long countryId) {
+        return teamDao.findByCountry_Id(countryId);
+    }
+
+    @Override
+    public List<Team> getTeamsByStadium(Long stadiumId) {
+        return teamDao.findByStadium_Id(stadiumId);
+    }
+
+    @Override
+    public List<Team> getTeamsByChampionship(Long championshipId) {
+        return teamDao.findTeamsByChampionshipId(championshipId);
     }
 }

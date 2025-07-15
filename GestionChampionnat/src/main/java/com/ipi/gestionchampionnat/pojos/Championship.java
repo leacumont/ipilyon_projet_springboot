@@ -26,7 +26,8 @@ public class Championship {
     @OneToMany(mappedBy = "championship")
     private List<TeamChampionship> teamChampionships;
 
-    private List<Team> teams;
+    @ManyToOne
+    private Country country;
 
     public Championship() {
     }
@@ -111,20 +112,20 @@ public class Championship {
         this.days = days;
     }
 
-    public List<Team> getTeams() {
-        return teams;
-    }
-
-    public void setTeams(List<Team> teams) {
-        this.teams = teams;
-    }
-
     public List<TeamChampionship> getTeamChampionships() {
         return teamChampionships;
     }
 
     public void setTeamChampionships(List<TeamChampionship> teamChampionships) {
         this.teamChampionships = teamChampionships;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     @Override
@@ -140,7 +141,8 @@ public class Championship {
                 ", drawPoint=" + drawPoint +
                 ", typeRanking='" + typeRanking + '\'' +
                 ", days=" + days +
-                ", teams=" + teams +
+                ", teamChampionships=" + teamChampionships +
+                ", country=" + country +
                 '}';
     }
 }

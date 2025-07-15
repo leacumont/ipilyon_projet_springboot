@@ -29,9 +29,6 @@ public class Team {
     @JoinColumn(name = "idCountry")
     private Country country;
 
-    @ManyToMany(mappedBy = "teams")
-    private List<Championship> championships;
-
     @OneToMany(mappedBy = "team1")
     private List<Game> team1;
 
@@ -140,14 +137,6 @@ public class Team {
         this.country = country;
     }
 
-    public List<Championship> getChampionships() {
-        return championships;
-    }
-
-    public void setChampionships(List<Championship> championships) {
-        this.championships = championships;
-    }
-
     public List<Game> getTeam1() {
         return team1;
     }
@@ -187,9 +176,9 @@ public class Team {
                 ", webSite='" + webSite + '\'' +
                 ", stadium=" + stadium +
                 ", country=" + country +
-                ", championships=" + championships +
                 ", team1=" + team1 +
                 ", team2=" + team2 +
+                ", teamChampionships=" + teamChampionships +
                 '}';
     }
 }
