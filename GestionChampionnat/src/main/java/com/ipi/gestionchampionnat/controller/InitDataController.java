@@ -75,7 +75,7 @@ public class InitDataController {
         Team psg = new Team();
         psg.setName("Paris Saint-Germain");
         psg.setCreationDate(LocalDate.of(1970, 8, 12));
-        psg.setLogo("https://example.com/logos/psg.png");
+        psg.setLogo("https://upload.wikimedia.org/wikipedia/fr/thumb/8/86/Paris_Saint-Germain_Logo.svg/1200px-Paris_Saint-Germain_Logo.svg.png");
         psg.setCoach("Luis Enrique");
         psg.setPresident("Nasser Al-Khelaïfi");
         psg.setStatus("Pro");
@@ -90,7 +90,7 @@ public class InitDataController {
         Team om = new Team();
         om.setName("Olympique de Marseille");
         om.setCreationDate(LocalDate.of(1899, 8, 31));
-        om.setLogo("https://example.com/logos/om.png");
+        om.setLogo("https://upload.wikimedia.org/wikipedia/fr/thumb/4/43/Logo_Olympique_de_Marseille.svg/1612px-Logo_Olympique_de_Marseille.svg.png");
         om.setCoach("Jean-Louis Gasset");
         om.setPresident("Pablo Longoria");
         om.setStatus("Pro");

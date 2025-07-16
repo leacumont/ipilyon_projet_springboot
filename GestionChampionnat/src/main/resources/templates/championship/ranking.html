@@ -2,37 +2,8 @@
 <html xmlns-th="http://www.thymeleaf.org">
 <head>
     <title>Classement [[${championShip.name}]]</title>
-    <link rel="stylesheet" href="/css/style.css" />
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        thead tr {
-            background-color: #f3f3f3;
-        }
-        td, th {
-            padding: 8px;
-            text-align: center;
-        }
-        td.name {
-            text-align: left;
-        }
-        .form {
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-        .form span {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin: 0 2px;
-        }
-        .win  { background: green; }
-        .draw { background: gray; }
-        .lose { background: red; }
-    </style>
+    <link rel="stylesheet" data-th-href="@{/css/style.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <header>
     <nav>
@@ -52,57 +23,55 @@
                 <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
                     <a data-th-href="@{/admin/dashboard}">Dashboard</a>
                 </span>
-                <form data-th-action="@{/logout}" method="post" style="display:inline;">
-                    <button type="submit">Déconnexion</button>
-                </form>
+                <a data-th-href="@{/logout}">Déconnexion</a>
             </div>
         </div>
     </nav>
 
 </header>
 <body>
+    <main>
+        <h2>Classement [[${championShip.name}]]</h2>
 
-<h2>Classement [[${championShip.name}]]</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Équipe</th>
+                <th>Pts</th>
+                <th>J</th>
+                <th>G</th>
+                <th>N</th>
+                <th>P</th>
+                <th>p.</th>
+                <th>c.</th>
+                <th>+/-</th>
+                <th>Forme</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-th-each="teamRank, iStat : ${ranking}">
+                <td data-th-text="${iStat.index + 1}">1</td>
+                <td class="name" data-th-text="${teamRank.team.name}">Équipe</td>
+                <td data-th-text="${teamRank.totalPoints}">84</td>
+                <td data-th-text="${teamRank.playedGames}">34</td>
+                <td data-th-text="${teamRank.wonGames}">26</td>
+                <td data-th-text="${teamRank.drawGames}">6</td>
+                <td data-th-text="${teamRank.lostGames}">2</td>
+                <td data-th-text="${teamRank.goalsFor}">92</td>
+                <td data-th-text="${teamRank.goalsAgainst}">35</td>
+                <td data-th-text="${teamRank.goalsFor - teamRank.goalsAgainst}">+57</td>
+                <td class="form">
+                <span data-th-each="result : ${teamRank.lastResults}"
+                      data-th-class="${result == 'W' ? 'win' : (result == 'D' ? 'draw' : (result == 'L' ? 'lose' : ''))}">
+                </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-<table>
-    <thead>
-    <tr>
-        <th>#</th>
-        <th>Équipe</th>
-        <th>Pts</th>
-        <th>J</th>
-        <th>G</th>
-        <th>N</th>
-        <th>P</th>
-        <th>p.</th>
-        <th>c.</th>
-        <th>+/-</th>
-        <th>Forme</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr data-th-each="teamRank, iStat : ${ranking}">
-        <td data-th-text="${iStat.index + 1}">1</td>
-        <td class="name" data-th-text="${teamRank.team.name}">Équipe</td>
-        <td data-th-text="${teamRank.totalPoints}">84</td>
-        <td data-th-text="${teamRank.playedGames}">34</td>
-        <td data-th-text="${teamRank.wonGames}">26</td>
-        <td data-th-text="${teamRank.drawGames}">6</td>
-        <td data-th-text="${teamRank.lostGames}">2</td>
-        <td data-th-text="${teamRank.goalsFor}">92</td>
-        <td data-th-text="${teamRank.goalsAgainst}">35</td>
-        <td data-th-text="${teamRank.goalsFor - teamRank.goalsAgainst}">+57</td>
-        <td class="form">
-        <span data-th-each="result : ${teamRank.lastResults}"
-              data-th-class="${result == 'W' ? 'win' : (result == 'D' ? 'draw' : (result == 'L' ? 'lose' : ''))}">
-        </span>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<br/>
-<a data-th-href="@{/}">← Retour aux championnats</a>
-
+        <br/>
+        <a data-th-href="@{/}">← Retour aux championnats</a>
+    </main>
 </body>
 </html>

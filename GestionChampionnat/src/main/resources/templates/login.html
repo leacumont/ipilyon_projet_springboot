@@ -2,9 +2,9 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../static/css/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font
-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" data-th-href="@{/css/style.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <title>Gestion Championnat</title>
 </head>
 <body>
@@ -26,21 +26,19 @@ awesome/4.7.0/css/font-awesome.min.css">
                 <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
                     <a data-th-href="@{/admin/dashboard}">Dashboard</a>
                 </span>
-                <form data-th-action="@{/logout}" method="post" style="display:inline;">
-                    <button type="submit">Déconnexion</button>
-                </form>
+                <a data-th-href="@{/logout}">Déconnexion</a>
             </div>
         </div>
     </nav>
 
 </header>
-
-
-<h1>Connexion</h1>
-<form data-th-action="@{/connexion}" method="post">
-    <input type="text" name="username" placeholder="Nom d'utilisateur" />
-    <input type="password" name="password" placeholder="Mot de passe" />
-    <button type="submit">Se connecter</button>
-</form>
+<main>
+    <h1>Connexion</h1>
+    <form data-th-action="@{/connexion}" method="post">
+        <input type="text" name="username" placeholder="Nom d'utilisateur" />
+        <input type="password" name="password" placeholder="Mot de passe" />
+        <button type="submit">Se connecter</button>
+    </form>
+</main>
 </body>
 </html>
