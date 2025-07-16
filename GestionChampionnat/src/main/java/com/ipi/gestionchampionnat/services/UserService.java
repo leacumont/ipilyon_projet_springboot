@@ -11,5 +11,4 @@ public interface UserService {
     User save(User user);
     void delete(Long id);
     void deleteAll();
-    boolean validatePassword(String rawPassword, String encodedPassword);
 }

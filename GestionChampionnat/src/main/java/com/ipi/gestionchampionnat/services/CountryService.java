@@ -10,6 +10,4 @@ public interface CountryService {
     Country save(Country country);
     void delete(Long id);
     void deleteAll();
-    List<Country> getCountriesWithTeams();
-    List<Country> getCountriesOrderByTeamsCount();
 }

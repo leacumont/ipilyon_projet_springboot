@@ -50,11 +50,6 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     }
 
     @Override
-    public List<Championship> getChampionshipsByTeam(Long teamId) {
-        return championshipDao.findChampionshipsByTeamId(teamId);
-    }
-
-    @Override
     public Long getLastDayId(Long championshipId) {
         List<Day> days = dayDao.findByChampionshipOrderByDayDateDesc(championshipId);
         if (days.isEmpty()) {

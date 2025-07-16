@@ -42,14 +42,4 @@ public class CountryServiceImpl implements CountryService {
     public void deleteAll() {
         countryDao.deleteAll();
     }
-
-    @Override
-    public List<Country> getCountriesWithTeams() {
-        return countryDao.findCountriesWithTeams();
-    }
-
-    @Override
-    public List<Country> getCountriesOrderByTeamsCount() {
-        return countryDao.findCountriesOrderByTeamsCount();
-    }
 }

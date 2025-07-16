@@ -116,19 +116,4 @@ public class TeamServiceImpl implements TeamService {
                     .sorted(Comparator.comparingInt(TeamRankingDTO::getTotalPoints).reversed())
                     .toList();
     }
-
-    @Override
-    public List<Team> getTeamsByCountry(Long countryId) {
-        return teamDao.findByCountry_Id(countryId);
-    }
-
-    @Override
-    public List<Team> getTeamsByStadium(Long stadiumId) {
-        return teamDao.findByStadium_Id(stadiumId);
-    }
-
-    @Override
-    public List<Team> getTeamsByChampionship(Long championshipId) {
-        return teamDao.findTeamsByChampionshipId(championshipId);
-    }
 }

@@ -47,10 +47,8 @@ public class AuthController {
                     = new UsernamePasswordAuthenticationToken(email, password);
             Authentication auth = authenticationManager.authenticate(authReq);
 
-            // Met à jour le contexte de sécurité avec l'authentification réussie
             SecurityContextHolder.getContext().setAuthentication(auth);
 
-            // Tu peux aussi garder ton utilisateur dans la session si tu veux
             User user = userDao.findByEmail(email);
             session.setAttribute("UserConnecte", user);
 

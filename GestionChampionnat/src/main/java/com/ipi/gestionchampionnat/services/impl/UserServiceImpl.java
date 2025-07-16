@@ -42,9 +42,4 @@ public class UserServiceImpl implements UserService {
     public void deleteAll() {
         userDao.deleteAll();
     }
-
-    @Override
-    public boolean validatePassword(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
-    }
 }

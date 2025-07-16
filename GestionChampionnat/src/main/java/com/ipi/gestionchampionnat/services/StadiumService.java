@@ -11,6 +11,4 @@ public interface StadiumService {
     Stadium save(Stadium stadium);
     void delete(Long id);
     void deleteAll();
-    List<Stadium> getStadiumsByCapacityRange(int minCapacity, int maxCapacity);
-    List<Stadium> getStadiumsWithMaxCapacity();
 }

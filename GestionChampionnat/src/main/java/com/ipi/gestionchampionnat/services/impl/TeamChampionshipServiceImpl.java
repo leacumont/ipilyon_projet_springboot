@@ -40,18 +40,4 @@ public class TeamChampionshipServiceImpl implements TeamChampionshipService {
     public void deleteAll() {
         teamChampionshipDao.deleteAll();
     }
-
-    @Override
-    public List<TeamChampionship> getTeamChampionshipsByChampionship(Long championshipId) {
-        return teamChampionshipDao.findByChampionship_Id(championshipId);
-    }
-    @Override
-    public List<TeamChampionship> getTeamChampionshipsByTeam(Long teamId) {
-        return teamChampionshipDao.findByTeam_Id(teamId);
-    }
-
-    @Override
-    public Optional<TeamChampionship> getTeamChampionshipByChampionshipAndTeam(Long championshipId, Long teamId) {
-        return teamChampionshipDao.findByChampionship_IdAndTeam_Id(championshipId, teamId);
-    }
 }

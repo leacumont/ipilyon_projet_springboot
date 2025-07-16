@@ -1,7 +1,6 @@
 package com.ipi.gestionchampionnat.services.impl;
 
 import com.ipi.gestionchampionnat.dao.UserDao;
-import com.ipi.gestionchampionnat.pojos.Role;
 import com.ipi.gestionchampionnat.pojos.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {

@@ -2,7 +2,6 @@ package com.ipi.gestionchampionnat.config;
 
 import com.ipi.gestionchampionnat.dao.UserDao;
 import com.ipi.gestionchampionnat.pojos.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

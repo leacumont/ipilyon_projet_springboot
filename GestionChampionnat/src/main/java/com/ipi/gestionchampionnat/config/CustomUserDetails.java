@@ -15,7 +15,6 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
-    // Implémenter tous les getters de UserDetails ici
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(user.getRole().toString()));

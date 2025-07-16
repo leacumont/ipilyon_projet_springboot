@@ -37,12 +37,4 @@ public class StadiumServiceImpl implements StadiumService {
     public void deleteAll() {
         stadiumDao.deleteAll();
     }
-
-    public List<Stadium> getStadiumsByCapacityRange(int minCapacity, int maxCapacity) {
-        return stadiumDao.findByCapacityBetween(minCapacity, maxCapacity);
-    }
-
-    public List<Stadium> getStadiumsWithMaxCapacity() {
-        return stadiumDao.findStadiumsWithMaxCapacity();
-    }
 }

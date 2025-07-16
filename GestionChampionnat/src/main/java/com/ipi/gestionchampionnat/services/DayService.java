@@ -12,5 +12,4 @@ public interface DayService {
     Day save(Day day);
     void delete(Long id);
     void deleteAll();
-    Optional<Day> getDayByChampionshipAndNumber(Long championshipId, String number);
 }

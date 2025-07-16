@@ -39,9 +39,4 @@ public class DayServiceImpl implements DayService {
     public void deleteAll() {
         dayDao.deleteAll();
     }
-
-    @Override
-    public Optional<Day> getDayByChampionshipAndNumber(Long championshipId, String number) {
-        return dayDao.findByChampionship_IdAndNumber(championshipId, number);
-    }
 }

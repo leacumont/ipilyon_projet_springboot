@@ -15,6 +15,5 @@ public interface ChampionshipService {
     void deleteAll();
 
     List<Championship> getChampionshipsByCountry(Country country);
-    List<Championship> getChampionshipsByTeam(Long teamId);
     Long getLastDayId(Long championshipId);
 }

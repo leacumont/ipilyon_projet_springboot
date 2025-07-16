@@ -12,8 +12,4 @@ public interface TeamChampionshipService {
     TeamChampionship save(TeamChampionship TeamChampionship);
     void delete(Long id);
     void deleteAll();
-    List<TeamChampionship> getTeamChampionshipsByChampionship(Long championshipId);
-    List<TeamChampionship> getTeamChampionshipsByTeam(Long teamId);
-    Optional<TeamChampionship> getTeamChampionshipByChampionshipAndTeam(Long championshipId, Long teamId);
-
 }
