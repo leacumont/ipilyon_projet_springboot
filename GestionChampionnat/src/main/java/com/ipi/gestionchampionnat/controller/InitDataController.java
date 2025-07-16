@@ -12,30 +12,15 @@ import java.util.ArrayList;
 
 @Controller
 public class InitDataController {
-
-    @Autowired
     private StadiumDao stadiumDao;
-
-    @Autowired
     private TeamDao teamDao;
-
-    @Autowired
     private CountryDao countryDao;
-
-    @Autowired
     private ChampionshipDao championshipDao;
-
-    @Autowired
     private DayDao dayDao;
-
-    @Autowired
     private GameDao gameDao;
-
-    @Autowired
     private TeamChampionshipDao teamChampionshipDao;
-
-    @Autowired
     private UserDao userDao;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -53,7 +38,7 @@ public class InitDataController {
 
     @PostConstruct
     protected void init() {
-        gameDao.deleteAll();
+        try {gameDao.deleteAll();
         teamChampionshipDao.deleteAll();
         teamDao.deleteAll();
         dayDao.deleteAll();
@@ -176,18 +161,6 @@ public class InitDataController {
         parcDesPrinces.getTeams().add(psg);
         parcDesPrinces.getTeams().add(om);
 
-        stadiumDao.save(parcDesPrinces);
-        countryDao.save(france);
-        championshipDao.save(championship);
-        dayDao.save(day1);
-        dayDao.save(day2);
-        teamDao.save(psg);
-        teamDao.save(om);
-        gameDao.save(match1);
-        gameDao.save(match2);
-        teamChampionshipDao.save(teamChampionshipPSG);
-        teamChampionshipDao.save(teamChampionshipOM);
-
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
@@ -204,7 +177,22 @@ public class InitDataController {
         admin.setCreationDate(LocalDate.now());
         admin.setRole(Role.ADMIN);
 
+        stadiumDao.save(parcDesPrinces);
+        countryDao.save(france);
+        championshipDao.save(championship);
+        dayDao.save(day1);
+        dayDao.save(day2);
+        teamDao.save(psg);
+        teamDao.save(om);
+        gameDao.save(match1);
+        gameDao.save(match2);
+        teamChampionshipDao.save(teamChampionshipPSG);
+        teamChampionshipDao.save(teamChampionshipOM);
         userDao.save(user);
         userDao.save(admin);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

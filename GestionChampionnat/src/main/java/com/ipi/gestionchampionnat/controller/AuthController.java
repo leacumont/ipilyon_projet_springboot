@@ -4,6 +4,11 @@ import com.ipi.gestionchampionnat.dao.UserDao;
 import com.ipi.gestionchampionnat.pojos.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +23,15 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    public AuthController(UserDao userDao, PasswordEncoder passwordEncoder) {
+        this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @GetMapping("/connexion")
     public String formConnexion() {
         return "login";
@@ -28,11 +42,20 @@ public class AuthController {
                             @RequestParam String password,
                             HttpSession session,
                             Model model) {
-        User user = userDao.findByEmail(email);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+        try {
+            UsernamePasswordAuthenticationToken authReq
+                    = new UsernamePasswordAuthenticationToken(email, password);
+            Authentication auth = authenticationManager.authenticate(authReq);
+
+            // Met à jour le contexte de sécurité avec l'authentification réussie
+            SecurityContextHolder.getContext().setAuthentication(auth);
+
+            // Tu peux aussi garder ton utilisateur dans la session si tu veux
+            User user = userDao.findByEmail(email);
             session.setAttribute("UserConnecte", user);
-            return "redirect:/";
-        } else {
+
+            return "redirect:/admin/dashboard";
+        } catch (AuthenticationException e) {
             model.addAttribute("erreur", true);
             return "login";
         }

@@ -47,10 +47,14 @@ awesome/4.7.0/css/font-awesome.min.css">
             </div>
 
             <div data-th-if="${#authorization.expression('isAuthenticated()')}">
-                <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
-                <a data-th-href="@{/admin/dashboard}">Dashboard</a> |
-            </span>
+                <div>
+                    Connecté en tant que : <span data-sec-authentication="name"></span><br/>
+                    Rôles : <span data-th-text="${#authentication.authorities[0]}"></span>
+                </div>
 
+                <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                    <a data-th-href="@{/admin/dashboard}">Dashboard</a>
+                </span>
                 <form data-th-action="@{/logout}" method="post" style="display:inline;">
                     <button type="submit">Déconnexion</button>
                 </form>

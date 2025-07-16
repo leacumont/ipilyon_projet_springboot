@@ -4,45 +4,16 @@
     <meta charset="UTF-8">
     <title>Admin - Création Données</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            padding: 2rem;
-        }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-        }
         form {
-            background: white;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 400px;
         }
-        label {
-            display: block;
-            margin-top: 1rem;
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 0.5rem;
-            margin-top: 0.3rem;
-        }
-        button {
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #1a242f;
+        form > div {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -56,10 +27,14 @@
             </div>
 
             <div data-th-if="${#authorization.expression('isAuthenticated()')}">
-                <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
-                <a data-th-href="@{/admin/dashboard}">Dashboard</a> |
-            </span>
+                <div>
+                    Connecté en tant que : <span data-sec-authentication="name"></span><br/>
+                    Rôles : <span data-th-text="${#authentication.authorities[0]}"></span>
+                </div>
 
+                <span data-th-if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                    <a data-th-href="@{/admin/dashboard}">Dashboard</a>
+                </span>
                 <form data-th-action="@{/logout}" method="post" style="display:inline;">
                     <button type="submit">Déconnexion</button>
                 </form>
@@ -73,32 +48,56 @@
 
 <form data-th-action="@{/admin/championship/create}" method="post">
     <h2>Créer un championnat</h2>
-    <label>Nom</label>
-    <input type="text" name="name" required>
 
-    <label>Logo (URL)</label>
-    <input type="text" name="logo">
+    <div>
+        <label>Nom</label>
+        <input type="text" name="name" required>
+    </div>
 
-    <label>Date de début</label>
-    <input type="date" name="startDate" required>
+    <div>
+        <label>Logo (URL)</label>
+        <input type="text" name="logo">
+    </div>
 
-    <label>Date de fin</label>
-    <input type="date" name="endDate" required>
+    <div>
+        <label>Date de début</label>
+        <input type="date" name="startDate" required>
+    </div>
 
-    <label>Points pour une victoire</label>
-    <input type="number" name="wonPoint" required>
+    <div>
+        <label>Date de fin</label>
+        <input type="date" name="endDate" required>
+    </div>
 
-    <label>Points pour un match nul</label>
-    <input type="number" name="drawPoint" required>
+    <div>
+        <label>Points pour une victoire</label>
+        <input type="number" name="wonPoint" required>
+    </div>
 
-    <label>Points pour une défaite</label>
-    <input type="number" name="lostPoint" required>
+    <div>
+        <label>Points pour un match nul</label>
+        <input type="number" name="drawPoint" required>
+    </div>
 
-    <label>Type de classement</label>
-    <input type="text" name="typeRanking" placeholder="Ex: points" required>
+    <div>
+        <label>Points pour une défaite</label>
+        <input type="number" name="lostPoint" required>
+    </div>
 
-    <label>Pays</label>
-    <select name="countryId" data-th-each="country : ${countries}" data-th-value="${country.id}" data-th-text="${country.name}"></select>
+    <div>
+        <label>Type de classement</label>
+        <input type="text" name="typeRanking" placeholder="Ex: points" required>
+    </div>
+
+    <div>
+        <label>Pays</label>
+        <select name="countryId">
+            <option data-th-each="country : ${countries}"
+                    data-th-value="${country.id}"
+                    data-th-text="${country.name}">
+            </option>
+        </select>
+    </div>
 
     <button type="submit">Créer</button>
 </form>
@@ -124,9 +123,15 @@
     <label>Site web</label>
     <input type="text" name="webSite">
     <label>Stade</label>
-    <select name="stadiumId" data-th-each="stadium : ${stadiums}" data-th-value="${stadium.id}" data-th-text="${stadium.name}"></select>
+    <select name="stadiumId">
+        <option data-th-each="stadium : ${stadiums}" data-th-value="${stadium.id}" data-th-text="${stadium.name}"></option></select>
     <label>Pays</label>
-    <select name="countryId" data-th-each="country : ${countries}" data-th-value="${country.id}" data-th-text="${country.name}"></select>
+    <select name="countryId">
+        <option data-th-each="country : ${countries}"
+                data-th-value="${country.id}"
+                data-th-text="${country.name}">
+        </option>
+    </select>
     <button type="submit">Créer</button>
 </form>
 
@@ -144,7 +149,7 @@
 
     <label for="dayId">Journée</label>
     <select id="dayId" name="dayId" required>
-        <option data-th-each="day : ${days}" data-th-value="${day.id}" data-th-text="${day.label}"></option>
+        <option data-th-each="day : ${days}" data-th-value="${day.id}" data-th-text="${day.number}"></option>
     </select>
 
     <label for="score1">Score Équipe 1</label>

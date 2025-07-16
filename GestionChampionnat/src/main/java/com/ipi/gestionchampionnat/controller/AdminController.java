@@ -31,16 +31,17 @@ public class AdminController {
     @Autowired
     private StadiumService stadiumService;
 
-    @GetMapping("/create")
+    @GetMapping("/dashboard")
     public String showCreatePage(Model model) {
         model.addAttribute("countries", countryService.findAll());
         model.addAttribute("championships", championshipService.findAll());
         model.addAttribute("teams", teamService.findAll());
+        model.addAttribute("stadiums", stadiumService.findAll());
         model.addAttribute("days", dayService.findAll());
-        return "admin-create";
+        return "admin/dashboard";
     }
 
-    @PostMapping("/createChampionship")
+    @PostMapping("/championship/create")
     public String createChampionship(@RequestParam String name,
                                      @RequestParam String logo,
                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -112,6 +113,6 @@ public class AdminController {
         game.setTeam1Point(score1);
         game.setTeam2Point(score2);
         gameService.save(game);
-        return "redirect:/admin/create";
+        return "redirect:/admin/dashboard";
     }
 }
